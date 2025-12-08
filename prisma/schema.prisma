@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ▼ 이 부분이 사라져서 에러가 났던 겁니다. 꼭 추가해주세요!
+model Style {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // ▼ 추가된 부분: Style은 여러 Curation을 가질 수 있음
+  curations   Curation[] 
+}
+
+// ▼ Curation 모델 새로 추가
+model Curation {
+  id        Int      @id @default(autoincrement())
+  message   String   // 큐레이팅 코멘트
+  styleId   Int
+  style     Style    @relation(fields: [styleId], references: [id], onDelete: Cascade)
+}
+
+
