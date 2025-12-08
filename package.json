@@ -1,0 +1,24 @@
+{
+  "name": "nb-howdoilook-team2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2/issues"
+  },
+  "homepage": "https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1",
+    "prisma": "^7.1.0"
+  }
+}
