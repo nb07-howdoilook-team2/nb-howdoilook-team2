@@ -1,0 +1,79 @@
+# 🚀 Git 협업 규칙 (Collaboration Guidelines)
+
+우리 프로젝트는 `main`, `dev`, 그리고 **개인 기능 브랜치**를 사용하는 간단하고 효율적인 워크플로우를 따릅니다.
+
+## 1. 📂 브랜치 규칙
+
+| 브랜치 | 목적 | 특징 |
+| :--- | :--- | :--- |
+| `main` | **최종 배포 코드** | **절대 직접 커밋 금지.** `dev`에서 PR을 통해서만 병합. |
+| `dev` | **통합 브랜치** | 모든 기능이 모이는 곳. **작업 시작 시 이 브랜치에서 분기.** |
+| `feat:taewon`(예시) | **개인 작업 공간** | `dev`에서 분기. 작업 완료 후 `dev`로 PR 요청. |
+* 각자 자기 이름의 브랜치 생성 및 작업 진행.
+
+## 2. 📝 커밋 규칙
+
+* **구조:** `<타입>: <제목>` (ex: `feat: Implement product service logic`)
+* **주요 타입:**
+    * `feat`: 새로운 기능 추가
+    * `fix`: 버그 수정
+    * `refactor`: 코드 리팩토링
+    * `docs`: 문서 수정
+
+---
+
+## 3. 🚦 핵심 작업 흐름 및 명령어
+
+### 1. 새로운 브랜치 생성 (최초)
+
+항상 `dev` 브랜치에서 최신 상태를 받고 **개인 기능 브랜치**를 생성합니다.
+
+```bash
+git checkout dev                        # 1. dev 이동
+git pull origin dev                     # 2. dev 최신화
+git checkout -b feat:내이름/작업내용    # 3. 새 브랜치 생성 및 이동
+```
+
+### 2. add & push
+
+```bash
+git add .                   # 변경사항 확정을 위한 준비 영역에 올리는 작업.
+git commit -m "내용"        # git add로 준비된 변경사항을 로컬 저장소의 히스토리로 확정하고 기록합니다
+git push origin [브랜치 이름]
+```
+
+### 3. 작업 도중 동기화
+
+`feat:내이름` 브랜치에서 작업 중, 다른 팀원이 `dev`에 푸시하여 `dev`가 업데이트되었을 때 이 작업을 수행합니다. (git pull 대신 Rebase 권장)
+```bash
+# dev 최신화
+git checkout dev        # dev 브랜치로 이동
+git pull origin dev     # 원격 dev의 최신 내용을 가져옴
+
+# rebase 적용
+git checkout feat:내이름/작업내용    # 내 기능 브랜치로 복귀
+git rebase dev                      # 동기화 (충돌 시 해결 필요)
+
+# 이후 push 진행시
+git push origin feat:내이름 --force
+```
+이 과정을 통해 본인의 커밋들이 변경된 dev의 최신 커밋 위에 깔끔하게 '올려'지게 되어 나중에 PR 시 충돌을 최소화하고 히스토리를 깨끗하게 유지할 수 있습니다.
+
+- 🚨 경고: `feat:팀원명` 브랜치는 개인 작업 공간이므로 강제 푸시를 사용해도 안전합니다. 하지만 `dev`나 `main` 같은 공유 브랜치에는 절대 `--force`를 사용해서는 안 됩니다.
+
+### 4. 동기화 중 충돌 시
+`git rebase dev`를 실행했을 때 충돌이 발생하면 Git은 작업을 일시 중지합니다. 이때 다음 단계를 따릅니다.
+
+- 충돌이 발생한 파일을 열어 수동으로 내용을 수정합니다.
+
+```bash
+# 충돌 해결 시
+git add .
+git rebase --continue           # 리베이스 다시 시작
+
+git rebase --abort              # 리베이스 취소(선택)
+```
+
+### 5. Pull Request (PR) 및 코드 리뷰
+
+작업 완료 후, `feat:내이름/작업내용` 브랜치에서 `dev` 브랜치로 PR을 요청합니다.
