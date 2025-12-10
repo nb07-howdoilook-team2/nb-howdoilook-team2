@@ -1,8 +1,8 @@
 import express from "express";
-import styleRouter from "./routes/style.router.js";
+import styleRouter from "./src/routes/style.router.js";
 // src/app.js
 import dotenv from "dotenv";
-import { errorHandler } from "./utils/errorHandler.js";
+import { errorHandler } from "./srt/utils/errorHandler.js";
 
 dotenv.config();
 
@@ -19,4 +19,4 @@ app.listen(apiPort, () => {
   console.log(`Server running on port ${apiPort}`);
 });
 
-//export default app;
+export default app;

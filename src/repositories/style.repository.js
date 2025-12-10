@@ -8,12 +8,14 @@ export const getStylesList = async ({ skip, limit, orderBy }) => {
     orderBy,
   });
 };
-//상세조회
+
+// 상세조희
 export const getFindStyle = async (styleId) => {
   return await prisma.style.findUnique({
     where: { id: BigInt(styleId) },
   });
 };
+
 // view 수 증가
 export const increaseViewCount = async (styleId) => {
   return await prisma.style.update({
@@ -23,3 +25,20 @@ export const increaseViewCount = async (styleId) => {
     },
   });
 };
+
+// // 스타일 수정
+// updateStyle = async (styleId, updateData) => {
+//   const updatedStyle = await this.prisma.style.update({
+//     where: { id: +styleId },
+//     data: updateData,
+//   });
+//   return updatedStyle;
+// };
+
+// // 스타일 삭제
+// deleteStyle = async (styleId) => {
+//   const deletedStyle = await this.prisma.style.delete({
+//     where: { id: +styleId },
+//   });
+//   return deletedStyle;
+// };

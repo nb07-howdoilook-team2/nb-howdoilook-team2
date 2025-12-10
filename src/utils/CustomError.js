@@ -19,7 +19,7 @@ export class HttpError extends CustomError {
   }
 }
 
-// 400 Bad Request
+// 400 Validateion 에러
 export class ValidationError extends HttpError {
   constructor(message = "잘못된 요청입니다.") {
     super(400, message);
