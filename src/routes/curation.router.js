@@ -1,13 +1,13 @@
 import { Router } from "express";
 import curationController from "../controllers/curation.controller.js";
 import prisma from "../../prisma/prisma.js";
-import { BadRequestError, NotFoundError } from "../utils/CustomError.js";
+import { ValidationError, NotFoundError } from "../utils/CustomError.js";
 // import error
 // import curation 클래스, 검증
 // import 답글
 
 const curationRouter = new Router({
-   mergeParams: true, // 부모 라우터에서 전달되는 styleId 등의 파라미터를 사용하기 위해 필요
+  mergeParams: true, // 부모 라우터에서 전달되는 styleId 등의 파라미터를 사용하기 위해 필요
 });
 /**
  * 큐레이션 관련 라우팅 정의
@@ -19,12 +19,12 @@ const curationRouter = new Router({
  */
 //curationRouter.use( // 답글 );
 curationRouter
-   .route("/")
-   // POST /styles/:styleId/curations: 큐레이팅 등록
-   // - 트렌디, 개성, 실용성, 가성비 점수와 한줄 큐레이팅, 닉네임, 비밀번호를 입력하여 큐레이팅을 등록합니다.
-   .post(curationController.createCurationController)
-   // GET /styles/:styleId/curations: 큐레이팅 목록 조회
-   .get(curationController.getCurationListController);
+  .route("/")
+  // POST /styles/:styleId/curations: 큐레이팅 등록
+  // - 트렌디, 개성, 실용성, 가성비 점수와 한줄 큐레이팅, 닉네임, 비밀번호를 입력하여 큐레이팅을 등록합니다.
+  .post(curationController.createCurationController)
+  // GET /styles/:styleId/curations: 큐레이팅 목록 조회
+  .get(curationController.getCurationListController);
 // ------------------------------------
 // '/curations/:curationId' 경로 처리
 // (보통 앱의 루트 라우터에서 직접 연결)
@@ -33,19 +33,19 @@ curationRouter
 // NOTE: 이 라우트들은 일반적으로 app.js에서 '/curations'와 같은 별도의 엔드포인트로 연결됩니다.
 // 예: app.use('/curations', curationRouter);
 curationRouter
-   .route("/:curationId")
-   .put(curationController.updateCurationController)
-   // **큐레이팅 수정** - validation 추가해야 됨
-   // - 비밀번호를 입력하여 큐레이팅 등록 시 입력했던 비밀번호와 일치할 경우 큐레이팅 수정이 가능합니다.
-   // 유효성 검사
-   // curationController
-   //      .put(
-   //     up.single('image'), // 단일 이미지 업로드 가정
-   //     validation, // 요청 데이터 유효성 검사
-   //     curationController.updateCuration // 실제 수정 로직을 컨트롤러로 분리
-   //  );
+  .route("/:curationId")
+  .put(curationController.updateCurationController)
+  // **큐레이팅 수정** - validation 추가해야 됨
+  // - 비밀번호를 입력하여 큐레이팅 등록 시 입력했던 비밀번호와 일치할 경우 큐레이팅 수정이 가능합니다.
+  // 유효성 검사
+  // curationController
+  //      .put(
+  //     up.single('image'), // 단일 이미지 업로드 가정
+  //     validation, // 요청 데이터 유효성 검사
+  //     curationController.updateCuration // 실제 수정 로직을 컨트롤러로 분리
+  //  );
 
-   .delete(curationController.deleteCurationController);
+  .delete(curationController.deleteCurationController);
 
 // - 비밀번호를 입력하여 큐레이팅 등록 시 입력했던 비밀번호와 일치할 경우 큐레이팅 삭제가 가능합니다.
 //     validation, // 요청 데이터 유효성 검사
