@@ -1,33 +1,29 @@
 {
-   "name": "nb-howdoilook-team2",
-   "version": "1.0.0",
-   "type": "module",
-   "main": "app.js",
-   "scripts": {
-      "start": "node app.js",
-      "main": "src/app.js",
-      "type": "module",
-      "scripts": {
-         "test": "echo \"Error: no test specified\" && exit 1"
-      },
-      "repository": {
-         "type": "git",
-         "url": "git+https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2.git"
-      },
-      "keywords": [],
-      "author": "",
-      "license": "ISC",
-      "bugs": {
-         "url": "https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2/issues"
-      },
-      "homepage": "https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2#readme",
-      "description": "우리 프로젝트는 `main`, `dev`, 그리고 **개인 기능 브랜치**를 사용하는 간단하고 효율적인 워크플로우를 따릅니다.",
-      "dependencies": {
-         "@prisma/client": "^7.1.0",
-         "bcrypt": "^6.0.0",
-         "dotenv": "^17.2.3",
-         "express": "^5.2.1",
-         "prisma": "^7.1.0"
-      }
-   }
+  "name": "nb-howdoilook-team2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2/issues"
+  },
+  "homepage": "https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1",
+    "prisma": "^7.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
 }
