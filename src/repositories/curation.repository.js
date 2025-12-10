@@ -10,7 +10,6 @@ export class Curation {
       oneLineReview,
       postNickname,
       password,
-      curationContent,
       createdAt
    ) {
       this.id = id;
@@ -21,7 +20,6 @@ export class Curation {
       this.oneLineReview = oneLineReview;
       this.postNickname = postNickname;
       this.password = password;
-      this.curationContent = curationContent;
       this.createdAt = createdAt;
    }
 }
