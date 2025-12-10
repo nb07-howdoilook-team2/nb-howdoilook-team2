@@ -30,6 +30,15 @@ const curationRepository = {
    // ------------------------------------
    // 큐레이션 생성 (CREATE)
    // ------------------------------------
+   create: async (curationData) => {
+      // Prisma의 create 메서드를 사용하여 데이터를 삽입합니다.
+      return prisma.curation.create({
+         data: curationData,
+      });
+   },
+   // ------------------------------------
+   // 큐레이션 id 찾기
+   // ------------------------------------
    findById: async (curationId) => {
       return prisma.curation.findUnique({
          where: { id: curationId },
