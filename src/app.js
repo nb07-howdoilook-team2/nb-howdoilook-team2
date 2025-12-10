@@ -16,7 +16,7 @@ const apiPort = process.env.API_PORT || 3000;
 app.use(errorHandler);
 
 app.listen(apiPort, () => {
-  console.log(`Server running on port ${apiPort}`);
+   console.log(`Server running on port ${apiPort}`);
 });
 
-export default app;
+//export default app;
