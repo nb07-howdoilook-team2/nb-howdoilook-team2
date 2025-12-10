@@ -5,10 +5,24 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client.js"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model Style {
+  id           BigInt   @id @default(autoincrement())
+  title        String
+  nickname     String
+  thumbnail    String?
+  tags         String[] @default([])
+  components   String[] @default([])
+  description  String?
+  views        Int      @default(0)
+  curatedCount Int      @default(0)
+  images       String[] @default([])
+  createdAt    DateTime @default(now())
 }

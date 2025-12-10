@@ -1,12 +1,15 @@
-import { getStylesService, findStyleService } from "../services/style.service";
+import {
+  getStylesService,
+  findStyleService,
+} from "../services/style.service.js";
 
 // 스타일 목록 조회
 // 갤러리 상단에 인기 태그가 표시됩니다. 해당 태그를 클릭하면 그 태그에 해당하는 스타일 목록이 표시됩니다.
-// 페이지네이션이 가능합니다.
 // 최신순, 조회순, 큐레이팅순(큐레이팅 많은 순)으로 정렬 가능합니다.
 // 닉네임, 제목, 상세, 태그로 검색이 가능합니다.
 export const getStylesController = async (req, res, next) => {
   try {
+    //페이지네이션
     const { page = 1, limit = 10, sort = "latest" } = req.query;
 
     const styles = await getStylesService({
@@ -30,7 +33,7 @@ export const findStyleController = async (req, res, next) => {
     const styleId = req.params.id;
     const findStyle = await findStyleService(styleId);
     return res.status(200).json(findStyle);
-  } catch {
+  } catch (e) {
     next(e);
   }
 };
