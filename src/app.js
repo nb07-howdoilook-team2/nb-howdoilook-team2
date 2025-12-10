@@ -1,10 +1,8 @@
 import express from "express";
 import styleRouter from "./src/routes/style.router.js";
 // src/app.js
-import express from "express";
 import dotenv from "dotenv";
 import { errorHandler } from "./utils/errorHandler.js";
-import styleRouter from "./routes/style.router.js";
 
 dotenv.config();
 

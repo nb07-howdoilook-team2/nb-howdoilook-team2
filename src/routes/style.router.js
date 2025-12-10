@@ -2,10 +2,8 @@ import express from "express";
 import {
   getStylesController,
   findStyleController,
+  StyleController,
 } from "../controllers/style.controller.js";
-// src/routes/style.router.js
-import express from "express";
-import StyleController from "../controllers/style.controller.js";
 import { validateRegisterStyle } from "../middleware/validation.middleware.js";
 
 const router = express.Router();
