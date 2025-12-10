@@ -1,7 +1,7 @@
 import {
   getStylesService,
   findStyleService,
-  //StyleService,
+  StyleService,
 } from "../services/style.service.js";
 
 // 스타일 목록 조회
@@ -39,22 +39,21 @@ export const findStyleController = async (req, res, next) => {
   }
 };
 
-// 에러때문에 주석 처리
-// class StyleController {
-//   static async createStyle(req, res, next) {
-//     const data = req.body;
+class StyleController {
+  static async createStyle(req, res, next) {
+    const data = req.body;
 
-//     try {
-//       const newStyle = await StyleService.register(data);
+    try {
+      const newStyle = await StyleService.register(data);
 
-//       return res.status(201).json({
-//         message: "스타일 등록 성공",
-//         data: newStyle,
-//       });
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
-// }
+      return res.status(201).json({
+        message: "스타일 등록 성공",
+        data: newStyle,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+}
 
-// export default StyleController;
+export default StyleController;

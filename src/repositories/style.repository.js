@@ -1,4 +1,4 @@
-import prisma from "../prisma/prisma.js";
+import prisma from "../../prisma/prisma.js";
 
 //목록조회
 export const getStylesList = async ({ skip, limit, orderBy }) => {
