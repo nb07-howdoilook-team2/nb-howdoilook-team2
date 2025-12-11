@@ -4,13 +4,16 @@ import express from "express";
 // import StyleController from "../controllers/style.controller.js";
 
 import {
-  getStylesController,
-  findStyleController,
-  // StyleController,
+   getStylesController,
+   findStyleController,
+   // StyleController,
 } from "../controllers/style.controller.js";
 import { validateRegisterStyle } from "../middleware/validation.middleware.js";
 
 const router = express.Router();
+
+// style.router.js에 styleId 파라미터 경로에 curationRouter를 마운트
+router.use("/:styleId/curations", curationRouter);
 
 router.get("/", getStylesController);
 

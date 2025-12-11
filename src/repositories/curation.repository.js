@@ -10,7 +10,6 @@ export class Curation {
       oneLineReview,
       postNickname,
       password,
-      curationContent,
       createdAt
    ) {
       this.id = id;
@@ -21,7 +20,6 @@ export class Curation {
       this.oneLineReview = oneLineReview;
       this.postNickname = postNickname;
       this.password = password;
-      this.curationContent = curationContent;
       this.createdAt = createdAt;
    }
 }
@@ -29,6 +27,15 @@ export class Curation {
 const curationRepository = {
    // ------------------------------------
    // 큐레이션 생성 (CREATE)
+   // ------------------------------------
+   create: async (curationData) => {
+      // Prisma의 create 메서드를 사용하여 데이터를 삽입합니다.
+      return prisma.curation.create({
+         data: curationData,
+      });
+   },
+   // ------------------------------------
+   // 큐레이션 id 찾기
    // ------------------------------------
    findById: async (curationId) => {
       return prisma.curation.findUnique({
@@ -78,7 +85,6 @@ const curationRepository = {
             costEffectivenessScore: true, // 가성비 점수
             oneLineReview: true, // 한줄평
             postNickname: true,
-            curationContent: true, // 내용 검색을 위해 포함
 
             createdAt: true,
 
