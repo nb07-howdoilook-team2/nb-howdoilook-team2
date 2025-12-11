@@ -76,6 +76,7 @@ export const validateRegisterCuration = (req, res, next) => {
       // 2. 데이터 타입 및 형식 검사
       // 2-1. 점수 필드 검사 (숫자형, 0~10 범위)
       const scoreFields = [
+         // score는 FE에서 순수한 숫자로만 옴
          { value: trndyScore, name: "트렌디 점수" },
          { value: individualityScore, name: "개성 점수" },
          { value: practicalityScore, name: "실용성 점수" },
