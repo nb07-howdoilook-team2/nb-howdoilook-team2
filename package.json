@@ -7,6 +7,9 @@
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "prisma": {
+    "seed": "node prisma/db/seed/seed.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nb07-howdoilook-team2/nb-howdoilook-team2.git"
