@@ -1,5 +1,5 @@
 import { ReplyRepository } from "../repositories/reply.repository.js";
-import { getFindStyle } from "../repositories/style.repository.js";
+import { findStyleById } from "../repositories/style.repository.js";
 import { ValidationError, ForbiddenError, NotFoundError } from "../utils/CustomError.js";
 import prisma from "../../prisma/prisma.js";
 
