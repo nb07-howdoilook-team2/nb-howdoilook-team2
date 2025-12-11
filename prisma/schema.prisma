@@ -1,17 +1,12 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Style {
@@ -26,4 +21,34 @@ model Style {
   curatedCount Int      @default(0)
   images       String[] @default([])
   createdAt    DateTime @default(now())
+
+  curations    Curation[]
+}
+
+model Curation {
+  id                         Int      @id @default(autoincrement())
+  styleId                    BigInt
+  trndyScore                 Int
+  individualityScore         Int
+  practicalityScore          Int
+  costEffectivenessScore     Int
+  oneLineReview              String
+  postNickname               String
+  password                   String
+  curationContent            String?
+  createdAt                  DateTime @default(now())
+
+  style     Style    @relation(fields: [styleId], references: [id])
+  replies   Reply[]
+}
+
+model Reply {
+  id          Int      @id @default(autoincrement())
+  curationId  Int
+  content     String
+  nickname    String?
+  password    String
+  createdAt   DateTime @default(now())
+
+  curation Curation @relation(fields: [curationId], references: [id])
 }
