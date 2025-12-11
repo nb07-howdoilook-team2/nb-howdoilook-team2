@@ -85,7 +85,6 @@ const curationRepository = {
             costEffectivenessScore: true, // 가성비 점수
             oneLineReview: true, // 한줄평
             postNickname: true,
-            curationContent: true, // 내용 검색을 위해 포함
 
             createdAt: true,
 
