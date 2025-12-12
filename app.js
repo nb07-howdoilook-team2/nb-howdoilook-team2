@@ -1,9 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import curationRouter from "./src/routes/curation.router.js";
+import styleRouter from "./src/routes/style.router.js";
 import imageRouter from "./src/routes/image.router.js";
+import {
+  ValidationError,
+  ForbiddenError,
+  NotFoundError,
+} from "./src/utils/CustomError.js";
 import { errorHandler } from "./src/utils/errorHandler.js";
-import router from "./src/routes/style.router.js";
 import tagRouter from "./src/routes/tag.router.js";
 import rankingRouter from "./src/routes/ranking.router.js";
 
@@ -11,6 +16,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
 // 💡 BigInt 처리 함수:
@@ -25,8 +31,9 @@ app.set("json replacer", bigIntToStringOrBypass);
 // 큐레이션 라우터 연결 (메인 엔드포인트)
 // PUT/DELETE /curations/:curationId 경로가 이 라우터를 통해 처리됩니다.
 app.use("/curations", curationRouter);
-app.use("/styles", router);
 app.use("/tags", tagRouter);
+app.use("/images", imageRouter);
+app.use("/ranking", rankingRouter);
 app.use("/images", imageRouter);
 app.use("/ranking", rankingRouter);
 
@@ -36,6 +43,9 @@ app.get("/", (req, res) => {
     endpoints: ["/styles", "/curations"],
   });
 });
+
+app.use("/api/styles", styleRouter); // styleRouter만 사용
+
 app.use(errorHandler);
 
 // const apiPort = process.env.API_PORT || 3000;
