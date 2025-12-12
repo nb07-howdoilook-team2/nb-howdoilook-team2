@@ -1,35 +1,10 @@
 import prisma from "../../prisma/prisma.js";
 
-//전체 랭킹 조회
-export const getTotalRanking = async (skip, limit) => {
-  const styles = await prisma.style.findMany({
-    orderBy: { rating: "desc" },
-    skip,
-    take: limit,
-  });
-
-  const count = await prisma.style.count();
-  return { styles, count };
-};
-
-export const getMetricRanking = async (metric, skip, limit) => {
-  const grouped = await prisma.curating.groupBy({
-    by: ["styleId"],
-    _avg: {
-      [metric]: true,
+// 스타일 + 큐레이션 전체 조회
+export const getAllStylesWithCurations = async () => {
+  return prisma.style.findMany({
+    include: {
+      curations: true, // 큐레이션 목록 포함
     },
-    orderBy: {
-      _avg: { [metric]: "desc" },
-    },
-    skip,
-    take: limit,
   });
-
-  const styleIds = grouped.map((p) => g.styleId);
-
-  const styles = await prisma.style.findMany({
-    where: { id: { in: styleIds } },
-  });
-
-  return styles;
 };
