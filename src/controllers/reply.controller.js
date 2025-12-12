@@ -1,64 +1,70 @@
-import { ReplyService } from "../services/reply.service.js";
-
-const replyService = new ReplyService();
+import { ReplyService } from '../services/reply.service.js';
 
 export class ReplyController {
-  // 댓글 생성
+  replyService = new ReplyService();
+
+  //댓글등록
   createReply = async (req, res, next) => {
     try {
-      const { curationId } = req.params;
-      const { nickname, password, content } = req.body;
+      const { curationId } = req.params; 
+      const { content, password, nickname } = req.body; 
 
-      const reply = await replyService.createReply(
-        Number(curationId),
-        nickname,
+      // Service 계층 호출
+      const data = await this.replyService.createReply(
+        curationId,
+        content,
         password,
-        content
+        nickname
       );
 
-      return res.status(201).json({
-        message: "댓글이 등록되었습니다.",
-        reply,
-      });
-    } catch (err) {
-      next(err);
+      // 성공 응답: 200 OK (명세서 기준)
+      return res.status(200).json(data);
+    } catch (error) {
+      // 에러를 다음 미들웨어(errorHandler)로 전달
+      next(error);
     }
   };
 
-  // 댓글 수정
+  //댓글수정
   updateReply = async (req, res, next) => {
     try {
-      const { replyId } = req.params;
-      const { password, content } = req.body;
+      // Path Parameter: commentId (BigInt)
+      const { commentId } = req.params;
+      // Request body: { content, password }
+      const { content, password } = req.body;
 
-      const reply = await replyService.updateReply(
-        Number(replyId),
-        password,
-        content
+      // Service 계층 호출
+      const data = await this.replyService.updateReply(
+        commentId,
+        content,
+        password
       );
 
-      return res.status(200).json({
-        message: "댓글이 수정되었습니다.",
-        reply,
-      });
-    } catch (err) {
-      next(err);
+      // 성공 응답: 200 OK
+      return res.status(200).json(data);
+    } catch (error) {
+      next(error);
     }
   };
 
-  // 댓글 삭제
+  // 댓글삭제
   deleteReply = async (req, res, next) => {
     try {
-      const { replyId } = req.params;
+      // Path Parameter: commentId (BigInt)
+      const { commentId } = req.params;
+      // Request body: { password }
       const { password } = req.body;
 
-      await replyService.deleteReply(Number(replyId), password);
+      // Service 계층 호출
+      const message = await this.replyService.deleteReply(
+        commentId,
+        password
+      );
 
-      return res.status(200).json({
-        message: "댓글이 삭제되었습니다.",
-      });
-    } catch (err) {
-      next(err);
+      // 성공 응답: 200 OK
+      return res.status(200).json({ message });
+    } catch (error) {
+      next(error);
     }
   };
 }
