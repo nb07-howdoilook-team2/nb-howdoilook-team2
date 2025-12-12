@@ -1,15 +1,13 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  //url      = env("DATABASE_URL")
 }
 
 model Style {
@@ -27,38 +25,31 @@ model Style {
   rating          Float     @default(0)
   createdAt       DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt       DateTime? @updatedAt @db.Timestamptz(6)
-  // Curation 모델과의 1:N 관계
   curations       Curation[]
+
 }
 
 model Curation {
-  // Primary Key, 자동 증가
   id                BigInt      @id @default(autoincrement())
 
-    // style 과는 N:1 관계, Foreign Key - 필수
   styleId           BigInt
   style             Style    @relation(fields: [styleId], references: [id])
 
   nickname          String
   content           String
 
-  // front-end에서 숫자로만 점수를 받아옴
-  // 점수 - 필수
   trendy            Int      
   personality       Int      
   practicality      Int      
   costEffectiveness Int      
   createdAt         DateTime @default(now()) @db.Timestamptz(6)
   password          String   
-  // reply와는 1:1 관계 ( 큐레이팅에 대한 답글은 최대 1개 )
-  // reply Reply?
-  // Prisma가 자동으로 관계를 추론할 수 없는 모호한 상황을 방지하기 위함( name )
   reply             Reply?   @relation(name: "CurationToReply") 
 }
 
 model Reply {
   id          BigInt      @id @default(autoincrement())
-  curationId  BigInt      @unique // 1:1 관계를 위해 필수 !
+  curationId  BigInt      @unique
   content     String
   nickname    String?
   password    String
