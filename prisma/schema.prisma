@@ -31,7 +31,7 @@ model Style {
   updatedAt       DateTime? @updatedAt @db.Timestamptz(6)
   // Curation 모델과의 1:N 관계
   curations       Curation[]
-
+}
 
 model Curation {
   // Primary Key, 자동 증가
