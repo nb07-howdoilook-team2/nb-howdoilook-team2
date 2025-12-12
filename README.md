@@ -54,7 +54,7 @@ git pull origin dev     # 원격 dev의 최신 내용을 가져옴
 
 # rebase 적용
 git checkout feat:내이름/작업내용    # 내 기능 브랜치로 복귀
-git rebase dev                      # 동기화 (충돌 시 해결 필요)
+git merge dev                      # 동기화 (충돌 시 해결 필요)
 
 # 이후 push 진행시
 git push origin feat:내이름 --force
@@ -82,6 +82,6 @@ git rebase --abort              # 리베이스 취소(선택)
 
 작업 완료 후, `feat:내이름/작업내용` 브랜치에서 `dev` 브랜치로 PR을 요청합니다.
 
-## 테스트 커밋
+## 6. 기능구현
 
-이 커밋은 Git push 테스트를 위해 생성되었습니다. (2025-12-09)
+https://orange-rhubarb-0ef.notion.site/How-Do-I-Look-Team2-2c79eb10fd74806d8befcdf9cdcd7bf3?source=copy_link
