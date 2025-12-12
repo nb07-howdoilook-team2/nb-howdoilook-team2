@@ -16,10 +16,10 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("🔄 기존 데이터 삭제 중...");
-  await prisma.reply.deleteMany();
-  await prisma.curation.deleteMany();
-  await prisma.style.deleteMany();
+  //   console.log("🔄 기존 데이터 삭제 중...");
+  //   await prisma.reply.deleteMany();
+  //   await prisma.curation.deleteMany();
+  //   await prisma.style.deleteMany();
 
   console.log("🌱 스타일 데이터 생성 중...");
 

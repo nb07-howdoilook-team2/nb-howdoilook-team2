@@ -8,11 +8,11 @@ import {
 } from "../repositories/style.repository.js";
 
 //목록조회, 오프셋페이지네이션, 검색, 정렬기준
-export const getStylesService = async ({ page, limit, sort, search, tag }) => {
+export const getStylesService = async ({ page, limit, sort, search }) => {
   const skip = (page - 1) * limit;
 
   let orderByOption = { createdAt: "desc" };
-  if (sort === "views") orderByOption = { views: "desc" };
+  if (sort === "viewCount") orderByOption = { viewCount: "desc" };
   if (sort === "curatedCount") orderByOption = { curatedCount: "desc" };
 
   const where = {};
@@ -24,10 +24,6 @@ export const getStylesService = async ({ page, limit, sort, search, tag }) => {
       { content: { contains: search, mode: "insensitive" } },
       { tags: { has: search } },
     ];
-  }
-
-  if (tag) {
-    where.tags = { has: tag };
   }
 
   const totalItemCount = await countStyles(where);

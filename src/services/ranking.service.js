@@ -8,7 +8,7 @@ export const getRankingList = async ({ page, limit, sort }) => {
 
   // 2. rating 계산
   const ranked = styles.map((style) => {
-    const ratingDetail = calculateRating(style.curations);
+    const ratingDetail = calculateRating(style.curations ?? []);
 
     return {
       id: style.id.toString(),
@@ -27,26 +27,37 @@ export const getRankingList = async ({ page, limit, sort }) => {
   // 3. sort 기준에 따른 정렬
   switch (sort) {
     case "trendy":
-      ranked.sort((a, b) => b.ratingDetail.trendy - a.ratingDetail.trendy);
+      ranked.sort(
+        (a, b) => (b.ratingDetail?.trendy ?? 0) - (a.ratingDetail?.trendy ?? 0)
+      );
       break;
     case "personality":
       ranked.sort(
         (a, b) => b.ratingDetail.personality - a.ratingDetail.personality
       );
       break;
-    case "practicality":
+    case "personality":
       ranked.sort(
-        (a, b) => b.ratingDetail.practicality - a.ratingDetail.practicality
+        (a, b) =>
+          (b.ratingDetail?.personality ?? 0) -
+          (a.ratingDetail?.personality ?? 0)
       );
       break;
+
+    case "practicality":
+      ranked.sort(
+        (a, b) =>
+          (b.ratingDetail?.practicality ?? 0) -
+          (a.ratingDetail?.practicality ?? 0)
+      );
+      break;
+
     case "cost":
       ranked.sort(
         (a, b) =>
-          b.ratingDetail.costEffectiveness - a.ratingDetail.costEffectiveness
+          (b.ratingDetail?.costEffectiveness ?? 0) -
+          (a.ratingDetail?.costEffectiveness ?? 0)
       );
-      break;
-    default: // total
-      ranked.sort((a, b) => b.rating - a.rating);
       break;
   }
   // 4. pagination

@@ -10,12 +10,13 @@ import {
 // 닉네임, 제목, 상세, 태그로 검색이 가능합니다.
 export const getStylesController = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, sort = "latest" } = req.query;
+    const { page = 1, limit = 10, sort = "latest", search } = req.query;
 
     const styles = await getStylesService({
       page: Number(page),
       limit: Number(limit),
       sort,
+      search,
     });
 
     return res.status(200).json(styles);
