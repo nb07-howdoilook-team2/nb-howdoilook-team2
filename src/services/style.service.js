@@ -4,6 +4,7 @@ import {
   getFindStyle,
   increaseViewCount,
 } from "../repositories/style.repository.js";
+import prisma from "../utils/prisma.js";
 
 export const getStylesService = async ({ page, limit, sort }) => {
   const skip = (page - 1) * limit; //페이지네이션
@@ -33,6 +34,48 @@ export const findStyleService = async (styleId) => {
   const updatedEntity = await increaseViewCount(styleId); //DB에서 조회하면 view 1 증가
   return StyleDetail.fromEntity(findStyle); //나중에 큐레이팅 목록 받아오는것도 작성할것
 };
+
+export class StyleService {
+  postStyle = async ({
+    nickname,
+    title,
+    content,
+    password,
+    categories,
+    tags,
+    imageUrls,
+  }) => {
+    // 1. thumbnail 필드 처리: imageUrls 배열의 첫 번째 요소를 thumbnail로 사용
+    const thumbnail = imageUrls && imageUrls.length > 0 ? imageUrls[0] : null;
+
+    const newStyle = await prisma.style.create({
+      data: {
+        nickname,
+        title,
+        content,
+        password,
+        thumbnail,
+        categories,
+        tags,
+        imageUrls,
+      },
+      select: {
+        id: true,
+        nickname: true,
+        title: true,
+        content: true,
+        thumbnail: true,
+        viewCount: true,
+        curationCount: true,
+        createdAt: true,
+        categories: true,
+        tags: true,
+        imageUrls: true,
+      },
+    });
+    return newStyle;
+  };
+}
 
 // // 스타일 수정 로직
 // updateStyle = async (styleId, password, updateData) => {

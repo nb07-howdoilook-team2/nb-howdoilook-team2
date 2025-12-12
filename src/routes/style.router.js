@@ -1,34 +1,21 @@
 import express from "express";
-// import StyleRepository from "../repositories/style.repository.js";
-// import StyleService from "../services/style.service.js";
-// import StyleController from "../controllers/style.controller.js";
-
 import {
-   getStylesController,
-   findStyleController,
-   // StyleController,
+  getStylesController,
+  findStyleController,
+  postStyleController,
 } from "../controllers/style.controller.js";
 import { validateRegisterStyle } from "../middleware/validation.middleware.js";
 
 const router = express.Router();
 
 // style.router.js에 styleId 파라미터 경로에 curationRouter를 마운트
-router.use("/:styleId/curations", curationRouter);
+// router.use("/:styleId/curations", curationRouter);
 
 router.get("/", getStylesController);
-
 router.get("/:id", findStyleController);
 
-// // POST /styles 엔드포인트: 미들웨어를 먼저 실행 후 컨트롤러 호출
-// router.post(
-//   "/",
-//   validateRegisterStyle, // 💡 유효성 검사 미들웨어 적용
-//   StyleController.createStyle
-// );
-
-// const styleRepository = new StyleRepository(prisma);
-// const styleService = new StyleService(styleRepository);
-// const styleController = new StyleController(styleService);
+// POST /styles 엔드포인트: 미들웨어를 먼저 실행 후 컨트롤러 호출
+router.post("/", validateRegisterStyle, postStyleController);
 
 /**
  * @swagger
