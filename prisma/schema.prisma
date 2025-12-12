@@ -11,19 +11,22 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Style {
-  id           BigInt   @id @default(autoincrement())
-  title        String
-  nickname     String
-  thumbnail    String?
-  tags         String[] @default([])
-  components   String[] @default([])
-  description  String?
-  views        Int      @default(0)
-  curatedCount Int      @default(0)
-  images       String[] @default([])
-  createdAt    DateTime @default(now())
+  id              BigInt    @id @default(autoincrement())
+  nickname        String
+  title           String
+  content         String
+  password        String
+  thumbnail       String?    
+  categories      Json
+  tags            String[]  @default([])
+  imageUrls       String[]  @default([])
+  viewCount       Int       @default(0)
+  curationCount   Int       @default(0)
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime? @updatedAt @db.Timestamptz(6)
+   //1:N 관계
+  //curations       Curation[]
 }

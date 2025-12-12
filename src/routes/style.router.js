@@ -6,14 +6,13 @@ import express from "express";
 import {
   getStylesController,
   findStyleController,
-  getPopularTagsController,
   // StyleController,
 } from "../controllers/style.controller.js";
+import { popularTagsController } from "../controllers/tag.controller.js";
 import { validateRegisterStyle } from "../middleware/validation.middleware.js";
 
 const router = express.Router();
 
-router.get("/tags/popular", getPopularTagsController); // 인기태그 목록
 router.get("/", getStylesController); // style 목록 조회
 router.get("/:id", findStyleController); // style 상세조회
 

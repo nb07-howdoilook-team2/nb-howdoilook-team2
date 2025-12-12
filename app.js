@@ -7,7 +7,8 @@ import {
   NotFoundError,
 } from "./src/utils/CustomError.js";
 import { errorHandler } from "./src/utils/errorHandler.js";
-import router from "./src/routes/style.router.js"; // 임시
+import router from "./src/routes/style.router.js";
+import tagRouter from "./src/routes/tag.router.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 // PUT/DELETE /curations/:curationId 경로가 이 라우터를 통해 처리됩니다.
 app.use("/curations", curationRouter);
 app.use("/styles", router);
+app.use("/tags", tagRouter);
 
 app.get("/", (req, res) => {
   res.json({
