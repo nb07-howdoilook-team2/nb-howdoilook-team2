@@ -1,7 +1,5 @@
 import { Router } from "express";
 import curationController from "../controllers/curation.controller.js";
-import prisma from "../../prisma/prisma.js";
-import { ValidationError, NotFoundError } from "../utils/CustomError.js";
 import { validateRegisterCuration } from "../middleware/validation.middleware.js";
 
 // import replyRouter from "./reply.router.js";
@@ -13,7 +11,7 @@ const curationRouter = new Router({
 });
 
 // 종속된 답글 라우터 => 라우터 이름 수정 필요
-curationRouter.use("/:curationId/replies", replyRouter);
+// curationRouter.use("/:curationId/replies", replyRouter);
 
 // 큐레이션 관련 라우팅 정의
 curationRouter

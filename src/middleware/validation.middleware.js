@@ -48,24 +48,16 @@ export const validateRegisterStyle = (req, res, next) => {
 export const validateRegisterCuration = (req, res, next) => {
    try {
       // 요청 본문 (Body)에서 데이터 추출
-      const {
-         trndyScore,
-         individualityScore,
-         practicalityScore,
-         costEffectivenessScore,
-         oneLineReview,
-         postNickname,
-         password,
-      } = req.body;
+      const { trendy, personality, practicality, costEffectiveness, content, nickname, password } = req.body;
       // 1. 필수 필드 존재 여부 검사
       const requiredFields = {
-         trndyScore: "트렌디 점수",
-         individualityScore: "개성 점수",
-         practicalityScore: "실용성 점수",
-         costEffectivenessScore: "가성비 점수",
-         oneLineReview: "한줄 큐레이팅",
-         postNickname: "닉네임",
+         nickname: "닉네임",
+         content: "한줄 큐레이팅",
          password: "비밀번호",
+         trendy: "트렌디 점수",
+         personality: "개성 점수",
+         practicality: "실용성 점수",
+         costEffectiveness: "가성비 점수",
       };
 
       for (const [field, name] of Object.entries(requiredFields)) {
@@ -77,10 +69,10 @@ export const validateRegisterCuration = (req, res, next) => {
       // 2-1. 점수 필드 검사 (숫자형, 0~10 범위)
       const scoreFields = [
          // score는 FE에서 순수한 숫자로만 옴
-         { value: trndyScore, name: "트렌디 점수" },
-         { value: individualityScore, name: "개성 점수" },
-         { value: practicalityScore, name: "실용성 점수" },
-         { value: costEffectivenessScore, name: "가성비 점수" },
+         { value: trendy, name: "트렌디 점수" },
+         { value: personality, name: "개성 점수" },
+         { value: practicality, name: "실용성 점수" },
+         { value: costEffectiveness, name: "가성비 점수" },
       ];
       for (const { value, name } of scoreFields) {
          const score = Number(value);
@@ -89,10 +81,10 @@ export const validateRegisterCuration = (req, res, next) => {
          }
       }
       // 2-2. 문자열 필드 검사
-      if (typeof oneLineReview !== "string" || oneLineReview.trim().length === 0) {
+      if (typeof content !== "string" || content.trim().length === 0) {
          throw new ValidationError("한줄 큐레이팅은 빈 문자열일 수 없습니다.");
       }
-      if (typeof postNickname !== "string" || postNickname.trim().length === 0) {
+      if (typeof nickname !== "string" || nickname.trim().length === 0) {
          throw new ValidationError("게시자 닉네임은 빈 문자열일 수 없습니다.");
       }
       // 모든 검증 통과
