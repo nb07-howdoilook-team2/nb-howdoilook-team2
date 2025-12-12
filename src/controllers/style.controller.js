@@ -1,7 +1,7 @@
 import {
+  StyleService,
   getStylesService,
   findStyleService,
-  // StyleService,
 } from "../services/style.service.js";
 
 // 스타일 목록 조회
@@ -10,14 +10,13 @@ import {
 // 닉네임, 제목, 상세, 태그로 검색이 가능합니다.
 export const getStylesController = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, sort = "latest", search, tag } = req.query;
+    const { page = 1, limit = 10, sort = "latest", search } = req.query;
 
     const styles = await getStylesService({
       page: Number(page),
       limit: Number(limit),
       sort,
       search,
-      tag,
     });
 
     return res.status(200).json(styles);
@@ -33,91 +32,84 @@ export const getStylesController = async (req, res, next) => {
 export const findStyleController = async (req, res, next) => {
   try {
     const styleId = req.params.id;
-    const style = await findStyleService(styleId);
-    if (!styleId) {
-      return res.status(404).json({ message: "스타일을 찾을 수 없습니다." });
-    }
-    return res.status(200).json(style);
-  } catch (e) {
+    const findStyle = await findStyleService(styleId);
+    return res.status(200).json(findStyle);
+  } catch {
     next(e);
   }
 };
 
-// 다시 정의 필요
-// class StyleController {
-//   static async createStyle(req, res, next) {
-//     const data = req.body;
-
-//     try {
-//       const newStyle = await StyleService.register(data);
-
-//       return res.status(201).json({
-//         message: "스타일 등록 성공",
-//         data: newStyle,
-//       });
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
-// // }
-//       return res.status(201).json({
-//         message: "스타일 등록 성공",
-//         data: newStyle,
-//       });
-//     } catch (error) {
-//       next(error);
-//     }
-//   }
-// }
-
-// 스타일 수정 API
-updateStyle = async (req, res, next) => {
+// POST /style: 새로운 스타일 게시물을 등록합니다.
+export const postStyleController = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { password, ...updateData } = req.body; // password와 나머지 수정 데이터 분리
+    const styleServiceInstance = new StyleService();
 
-    if (!password) {
-      throw new Error("비밀번호를 입력해주세요."); // 혹은 CustomError 사용
-    }
+    // 유효성 검사 미들웨어를 통과한 데이터
+    const { nickname, title, content, password, categories, tags, imageUrls } =
+      req.body;
 
-    const updatedStyle = await this.styleService.updateStyle(
-      id,
+    // 인스턴스를 통해 POST 메서드를 호출
+    const createdStyle = await styleServiceInstance.postStyle({
+      nickname,
+      title,
+      content,
       password,
-      updateData
-    );
-
-    return res.status(200).json({ data: updatedStyle });
-  } catch (error) {
-    next(error); // Global Error Handler로 전달
-  }
-};
-
-// 스타일 삭제 API
-deleteStyle = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { password } = req.body;
-
-    if (!password) {
-      throw new Error("비밀번호를 입력해주세요.");
-    }
-
-    const deletedStyle = await this.styleService.deleteStyle(id, password);
-
-    return res.status(200).json({
-      message: "스타일이 삭제되었습니다.",
-      id: deletedStyle.id,
+      categories,
+      tags,
+      imageUrls,
     });
+
+    // 응답 데이터에서 비밀번호 필드 제거 (보안)
+    const { password: _, ...responseStyle } = createdStyle;
+
+    return res.status(201).json(responseStyle);
   } catch (error) {
-    next(error); // Global Error Handler로 전달
+    next(error);
   }
 };
 
-updateStyle = async (req, res, next) => {
-  /* ... */
-};
-deleteStyle = async (req, res, next) => {
-  /* ... */
-};
+// // 스타일 수정 API
+// updateStyle = async (req, res, next) => {
+//    try {
+//       const { id } = req.params;
+//       const { password, ...updateData } = req.body; // password와 나머지 수정 데이터 분리
 
-export default StyleController;
+//       if (!password) {
+//          throw new Error("비밀번호를 입력해주세요."); // 혹은 CustomError 사용
+//       }
+
+//       const updatedStyle = await this.styleService.updateStyle(id, password, updateData);
+
+//       return res.status(200).json({ data: updatedStyle });
+//    } catch (error) {
+//       next(error); // Global Error Handler로 전달
+//    }
+// };
+
+// // 스타일 삭제 API
+// deleteStyle = async (req, res, next) => {
+//    try {
+//       const { id } = req.params;
+//       const { password } = req.body;
+
+//       if (!password) {
+//          throw new Error("비밀번호를 입력해주세요.");
+//       }
+
+//       const deletedStyle = await this.styleService.deleteStyle(id, password);
+
+//       return res.status(200).json({
+//          message: "스타일이 삭제되었습니다.",
+//          id: deletedStyle.id,
+//       });
+//    } catch (error) {
+//       next(error); // Global Error Handler로 전달
+//    }
+// };
+
+// updateStyle = async (req, res, next) => {
+//    /* ... */
+// };
+// deleteStyle = async (req, res, next) => {
+//    /* ... */
+// };

@@ -1,5 +1,8 @@
+
 import { ReplyRepository } from '../repositories/reply.repository.js';
 import { ValidationError, ForbiddenError, NotFoundError } from '../utils/CustomError.js';
+
+import prisma from '../../prisma/prisma.js'; 
 
 export class ReplyService {
   replyRepository = new ReplyRepository();
@@ -9,6 +12,28 @@ export class ReplyService {
       throw new ValidationError("content, password, nickname은 필수 입력 항목입니다.");
     }
     
+    try {
+        const curationExists = await prisma.curation.findUnique({
+            where: { id: BigInt(curationId) },
+        });
+
+        if (!curationExists) {
+            throw new NotFoundError("해당 큐레이션 ID를 찾을 수 없습니다.");
+        }
+    } catch (error) {
+        // BigInt 변환 실패 또는 DB 조회 오류 시 404 처리
+        if (error instanceof NotFoundError) {
+            throw error; 
+        }
+        // Curation ID 형식이 잘못되었을 때 (ex: 숫자가 아닌 문자열)
+        if (error.message.includes('BigInt')) {
+            throw new ValidationError("큐레이션 ID 형식이 올바르지 않습니다.");
+        }
+        // 기타 DB 오류는 다음 단계에서 처리됨
+        throw error;
+    }
+
+
     const createdReply = await this.replyRepository.createReply(
       curationId,
       content,
