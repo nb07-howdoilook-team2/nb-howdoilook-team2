@@ -2,10 +2,16 @@ import prisma from "../../prisma/prisma.js";
 import { Style, StyleDetail } from "../models/Style.js";
 import {
   getStylesList,
-  getFindStyle,
+  // 💡 Alias 적용: getFindStyle 함수를 가져와서 findStyleById 라는 이름으로 사용
+  getFindStyle as findStyleById,
   increaseViewCount,
+  updateStyle, // 추가
+  deleteStyle, // 추가
+  createStyle, // 추가
+  // 💡 [수정됨] countStyles 함수를 Repository에서 가져옵니다.
   countStyles,
 } from "../repositories/style.repository.js";
+import { ForbiddenError, NotFoundError } from "../utils/CustomError.js"; // 커스텀 에러
 
 //목록조회, 오프셋페이지네이션, 검색, 정렬기준
 export const getStylesService = async ({ page, limit, sort, search, tag }) => {
@@ -49,7 +55,8 @@ export const getStylesService = async ({ page, limit, sort, search, tag }) => {
 
 //상세조회
 export const findStyleService = async (styleId) => {
-  const style = await getFindStyle(styleId);
+  // 🔽 [수정됨] findStyleById (별칭)을 사용하여 조회
+  const style = await findStyleById(styleId);
   if (!style) return null;
 
   // 조회수 증가
@@ -76,50 +83,69 @@ export const findStyleService = async (styleId) => {
   };
 };
 
-// // 스타일 수정 로직
-// updateStyle = async (styleId, password, updateData) => {
-//   // 1. 해당 스타일 존재 여부 확인
-//   const style = await this.styleRepository.findStyleById(styleId);
-//   if (!style) {
-//     throw new CustomError(404, "존재하지 않는 스타일입니다.");
-//   }
+// 💡 스타일 수정 로직 (추가)
+export const updateStyleService = async (styleId, password, updateData) => {
+  // 1. 해당 스타일 존재 여부 확인 (비밀번호 검증을 위해 findStyleById 사용)
+  const style = await findStyleById(styleId);
+  if (!style) {
+    throw new NotFoundError("존재하지 않습니다."); // 404
+  }
 
-//   // 2. 비밀번호 검증 (단순 문자열 비교 예시, 실제 서비스에선 해시 비교 권장)
-//   if (style.password !== password) {
-//     throw new CustomError(403, "비밀번호가 일치하지 않습니다.");
-//   }
+  // 2. 비밀번호 검증 (실제 서비스에서는 해싱된 비밀번호 비교 권장)
+  if (style.password !== password) {
+    throw new ForbiddenError("비밀번호가 틀렸습니다"); // 403
+  }
 
-//   // 3. 수정 진행
-//   const updatedStyle = await this.styleRepository.updateStyle(
-//     styleId,
-//     updateData
-//   );
+  // 3. 수정 진행
+  const updatedStyle = await updateStyle(styleId, updateData);
 
-//   return updatedStyle;
-// };
+  // 응답 명세에 맞게 StyleDetail 모델로 변환하여 반환
+  // TODO: StyleDetail.fromEntity 구현 필요
+  // 🔽 [최종 수정] API 명세 형식에 맞춰 반환 값을 구성합니다.
+  return {
+    id: updatedStyle.id.toString(), // BigInt -> String
+    nickname: updatedStyle.nickname,
+    title: updatedStyle.title,
+    content: updatedStyle.content,
+    viewCount: updatedStyle.viewCount,
+    curationCount: updatedStyle.curationCount,
+    createdAt: updatedStyle.createdAt,
+    tags: updatedStyle.tags,
+    imageUrls: updatedStyle.imageUrls ?? [],
+    categories: updatedStyle.categories
+      ? {
+          top: updatedStyle.categories.top,
+          bottom: updatedStyle.categories.bottom,
+        }
+      : null,
+  };
+};
 
-// // 스타일 삭제 로직
-// deleteStyle = async (styleId, password) => {
-//   // 1. 해당 스타일 존재 여부 확인
-//   const style = await this.styleRepository.findStyleById(styleId);
-//   if (!style) {
-//     throw new CustomError(404, "존재하지 않는 스타일입니다.");
-//   }
+// 💡 스타일 삭제 로직 (추가)
+export const deleteStyleService = async (styleId, password) => {
+  // 1. 해당 스타일 존재 여부 확인
+  const style = await findStyleById(styleId);
+  if (!style) {
+    throw new NotFoundError("존재하지 않습니다."); // 404
+  }
 
-//   // 2. 비밀번호 검증
-//   if (style.password !== password) {
-//     throw new CustomError(403, "비밀번호가 일치하지 않습니다.");
-//   }
+  // 2. 비밀번호 검증
+  if (style.password !== password) {
+    throw new ForbiddenError("비밀번호가 틀렸습니다"); // 403
+  }
 
-//   // 3. 삭제 진행
-//   const deletedStyle = await this.styleRepository.deleteStyle(styleId);
+  // 3. 삭제 진행
+  await deleteStyle(styleId);
 
-//   return deletedStyle;
-// };
+  return { message: "스타일 삭제 성공" };
+};
 
-// updateStyle = async (styleId, password, updateData) => {
-//   /* ... */
-// };
-// deleteStyle = async (styleId, password) => {
-//   /* ... */
-// };
+// ▼ 스타일 등록 로직 함수 추가 (export const)
+export const createStyleService = async (styleData) => {
+  // 1. 비밀번호 해싱 등 필요한 비즈니스 로직 수행 (여기서는 생략)
+
+  // 2. Repository 레이어에 생성 요청
+  const newStyle = await createStyle(styleData);
+
+  return newStyle;
+};

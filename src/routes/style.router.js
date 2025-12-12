@@ -1,15 +1,18 @@
 import express from "express";
-// import StyleRepository from "../repositories/style.repository.js";
-// import StyleService from "../services/style.service.js";
-// import StyleController from "../controllers/style.controller.js";
-
+import curationRouter from "./curation.router.js"; //추가
 import {
   getStylesController,
   findStyleController,
-  // StyleController,
+  updateStyleController, // 추가
+  deleteStyleController, // 추가
+  createStyleController, // POST 요청 처리를 위해 추가
 } from "../controllers/style.controller.js";
 import { popularTagsController } from "../controllers/tag.controller.js";
-import { validateRegisterStyle } from "../middleware/validation.middleware.js";
+// 💡 미들웨어 import
+import {
+  validateUpdateStyle,
+  validateDeleteStyle,
+} from "../middleware/validation.middleware.js";
 
 const router = express.Router();
 
@@ -20,16 +23,21 @@ router.get("/", getStylesController);
 
 router.get("/:id", findStyleController);
 
-// // POST /styles 엔드포인트: 미들웨어를 먼저 실행 후 컨트롤러 호출
-// router.post(
-//   "/",
-//   validateRegisterStyle, // 💡 유효성 검사 미들웨어 적용
-//   StyleController.createStyle
-// );
+router.post("/", createStyleController); // 새 스타일 등록 (POST)
 
-// const styleRepository = new StyleRepository(prisma);
-// const styleService = new StyleService(styleRepository);
-// const styleController = new StyleController(styleService);
+// 💡 PUT /styles/:id (수정) 라우트 연결
+router.put(
+  "/:id",
+  validateUpdateStyle, // ✅ 유효성 검사 적용
+  updateStyleController
+);
+
+// 💡 DELETE /styles/:id (삭제) 라우트 연결
+router.delete(
+  "/:id",
+  validateDeleteStyle, // ✅ 유효성 검사 적용
+  deleteStyleController
+);
 
 /**
  * @swagger
