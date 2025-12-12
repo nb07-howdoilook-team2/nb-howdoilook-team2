@@ -6,12 +6,10 @@
 
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  //url      = env("DATABASE_URL")
 }
 
 model Style {
@@ -53,6 +51,7 @@ model Curation {
   createdAt         DateTime @default(now()) @db.Timestamptz(6)
   password          String   
   // reply와는 1:1 관계 ( 큐레이팅에 대한 답글은 최대 1개 )
+  // reply Reply?
   // Prisma가 자동으로 관계를 추론할 수 없는 모호한 상황을 방지하기 위함( name )
   reply             Reply?   @relation(name: "CurationToReply") 
 }

@@ -76,6 +76,48 @@ export const findStyleService = async (styleId) => {
   };
 };
 
+export class StyleService {
+  postStyle = async ({
+    nickname,
+    title,
+    content,
+    password,
+    categories,
+    tags,
+    imageUrls,
+  }) => {
+    // 1. thumbnail 필드 처리: imageUrls 배열의 첫 번째 요소를 thumbnail로 사용
+    const thumbnail = imageUrls && imageUrls.length > 0 ? imageUrls[0] : null;
+
+    const newStyle = await prisma.style.create({
+      data: {
+        nickname,
+        title,
+        content,
+        password,
+        thumbnail,
+        categories,
+        tags,
+        imageUrls,
+      },
+      select: {
+        id: true,
+        nickname: true,
+        title: true,
+        content: true,
+        thumbnail: true,
+        viewCount: true,
+        curationCount: true,
+        createdAt: true,
+        categories: true,
+        tags: true,
+        imageUrls: true,
+      },
+    });
+    return newStyle;
+  };
+}
+
 // // 스타일 수정 로직
 // updateStyle = async (styleId, password, updateData) => {
 //   // 1. 해당 스타일 존재 여부 확인
