@@ -1,38 +1,80 @@
+import prisma from "../../prisma/prisma.js";
 import { Style, StyleDetail } from "../models/Style.js";
 import {
   getStylesList,
   getFindStyle,
   increaseViewCount,
+  countStyles,
 } from "../repositories/style.repository.js";
 import prisma from "../utils/prisma.js";
 
-export const getStylesService = async ({ page, limit, sort }) => {
-  const skip = (page - 1) * limit; //페이지네이션
+//목록조회, 오프셋페이지네이션, 검색, 정렬기준
+export const getStylesService = async ({ page, limit, sort, search, tag }) => {
+  const skip = (page - 1) * limit;
 
-  // 기본 정렬 조건(생성 시간 순)
   let orderByOption = { createdAt: "desc" };
+  if (sort === "views") orderByOption = { views: "desc" };
+  if (sort === "curatedCount") orderByOption = { curatedCount: "desc" };
 
-  if (sort === "views") {
-    orderByOption = { views: "desc" }; // view 오름차순
-  } else if (sort === "curatedCount") {
-    orderByOption = { curatedCount: "desc" }; // curatedCount 오름차순
+  const where = {};
+
+  if (search && search.trim() !== "") {
+    where.OR = [
+      { title: { contains: search, mode: "insensitive" } },
+      { nickname: { contains: search, mode: "insensitive" } },
+      { content: { contains: search, mode: "insensitive" } },
+      { tags: { has: search } },
+    ];
   }
+
+  if (tag) {
+    where.tags = { has: tag };
+  }
+
+  const totalItemCount = await countStyles(where);
+
   const styles = await getStylesList({
-    skip, //몇 페이지
-    limit, //한 페이지당 게시글 갯수
-    orderBy: orderByOption, // 무슨 기준으로 데이터를 불러올건지
+    where,
+    skip,
+    limit,
+    orderBy: orderByOption,
   });
 
-  console.log(styles);
-  return styles.map((style) => Style.fromEntity(style));
+  return {
+    currentPage: page,
+    totalPages: Math.ceil(totalItemCount / limit),
+    totalItemCount,
+    data: styles.map((s) => Style.fromEntity(s)),
+  };
 };
 
+//상세조회
 export const findStyleService = async (styleId) => {
-  const findStyle = await getFindStyle(styleId);
-  if (!findStyle) return null; //데이터 없을경우 null 반환
+  const style = await getFindStyle(styleId);
+  if (!style) return null;
 
-  const updatedEntity = await increaseViewCount(styleId); //DB에서 조회하면 view 1 증가
-  return StyleDetail.fromEntity(findStyle); //나중에 큐레이팅 목록 받아오는것도 작성할것
+  // 조회수 증가
+  await increaseViewCount(styleId);
+
+  // API 명세서 형식에 맞추기
+  return {
+    id: style.id.toString(),
+    nickname: style.nickname,
+    title: style.title,
+    content: style.content,
+    viewCount: style.viewCount,
+    curationCount: style.curationCount,
+    createdAt: style.createdAt,
+    tags: style.tags,
+    imageUrls: style.imageUrls ?? [],
+
+    categories: style.categories
+      ? {
+          top: style.categories.top,
+          bottom: style.categories.bottom,
+        }
+      : null,
+  };
 };
 
 export class StyleService {

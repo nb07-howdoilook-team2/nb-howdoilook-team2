@@ -10,7 +10,10 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+<<<<<<< HEAD
   url      = env("DATABASE_URL")
+=======
+>>>>>>> dev
 }
 
 model Style {
@@ -19,8 +22,12 @@ model Style {
   title           String
   content         String
   password        String
+<<<<<<< HEAD
   thumbnail       String?
 
+=======
+  thumbnail       String?    
+>>>>>>> dev
   categories      Json
   tags            String[]  @default([])
   imageUrls       String[]  @default([])
@@ -32,26 +39,25 @@ model Style {
   curations       Curation[]
 }
 
+
 model Curation {
   // Primary Key, 자동 증가
   id          BigInt   @id @default(autoincrement())
-
-  // front-end에서 숫자로만 점수를 받아옴
   // style 과는 N:1 관계, Foreign Key - 필수
   styleId     BigInt
   style       Style   @relation(fields: [styleId], references: [id])
 
-  // 점수 - 필수
-  trendyScore            BigInt 
-  individualityScore     BigInt
-  practicalityScore      BigInt
-  costEffectivenessScore BigInt
+  nickname    String
+  content     String
 
-  oneLineReview String
-  postNickname  String
-  password      String
-  createdAt     DateTime @default(now())
-  
+  // front-end에서 숫자로만 점수를 받아옴
+  // 점수 - 필수
+  trendy             Int 
+  personality        Int
+  practicality       Int
+  costEffectiveness  Int
+  createdAt          DateTime @default(now())
+  password           String
   // reply와는 1:1 관계 ( 큐레이팅에 대한 답글은 최대 1개 )
   // reply Reply?
 }

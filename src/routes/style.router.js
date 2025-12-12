@@ -4,6 +4,7 @@ import {
   findStyleController,
   postStyleController,
 } from "../controllers/style.controller.js";
+import { popularTagsController } from "../controllers/tag.controller.js";
 import { validateRegisterStyle } from "../middleware/validation.middleware.js";
 
 const router = express.Router();

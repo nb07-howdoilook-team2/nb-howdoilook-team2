@@ -3,37 +3,40 @@
 export class Style {
   constructor(
     id,
-    title,
+    thumbnail,
     nickname,
-    thumbnail, //대표 이미지
+    title,
     tags,
-    components, // 스타일 구성
-    description,
-    views,
-    curatedCount
+    categories,
+    content,
+    viewCount,
+    curationCount,
+    createdAt
   ) {
     this.id = id;
-    this.title = title;
-    this.nickname = nickname;
     this.thumbnail = thumbnail;
+    this.nickname = nickname;
+    this.title = title;
     this.tags = tags;
-    this.components = components;
-    this.description = description;
-    this.views = views;
-    this.curatedCount = curatedCount;
+    this.categories = categories;
+    this.content = content;
+    this.viewCount = viewCount;
+    this.curationCount = curationCount;
+    this.createdAt = createdAt;
   }
 
   static fromEntity(entity) {
     return new Style(
       entity.id.toString(),
-      entity.title,
+      entity.imageUrls?.[0] || null, // 첫 번째 이미지를 thumbnail로 사용
       entity.nickname,
-      entity.thumbnail,
+      entity.title,
       entity.tags ?? [],
-      entity.components ?? [],
-      entity.description,
-      entity.views,
-      entity.curatedCount
+      entity.categories ?? {},
+      entity.content,
+      entity.viewCount,
+      entity.curationCount,
+      entity.createdAt
     );
   }
 }
@@ -45,40 +48,43 @@ export class Style {
 export class StyleDetail {
   constructor(
     id,
-    title,
     nickname,
-    images,
+    title,
+    content,
+    viewCount,
+    curationCount,
+    createdAt,
+    categories,
     tags,
-    components,
-    description,
-    views,
-    curatedCount,
+    imageUrls,
     curatedList
   ) {
     this.id = id;
-    this.title = title;
     this.nickname = nickname;
-    this.images = images;
+    this.title = title;
+    this.content = content;
+    this.viewCount = viewCount;
+    this.curationCount = curationCount;
+    this.createdAt = createdAt;
+    this.categories = categories;
     this.tags = tags;
-    this.components = components;
-    this.description = description;
-    this.views = views;
-    this.curatedCount = curatedCount;
+    this.imageUrls = imageUrls;
     this.curatedList = curatedList;
   }
 
-  static fromEntity(entity, curatedList = []) {
+  static fromEntity(entity) {
     return new StyleDetail(
       entity.id.toString(),
-      entity.title,
       entity.nickname,
-      entity.images ?? [], //이미지 여러장
-      entity.tags ?? [],
-      entity.components ?? [],
-      entity.description,
-      entity.views ?? 0,
-      entity.curatedCount ?? 0,
-      curatedList // 상세목록 조회에는 큐레이팅 목록 포함
+      entity.title,
+      entity.content,
+      entity.viewCount,
+      entity.curationCount,
+      entity.createdAt,
+      entity.categories,
+      entity.tags,
+      entity.imageUrls,
+      entity.curations ?? []
     );
   }
 }

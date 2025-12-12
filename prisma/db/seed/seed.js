@@ -54,49 +54,8 @@ async function main() {
       },
     ],
   });
+
   console.log("🌱 Seed data inserted successfully!");
-}
-
-// 2. Curation 등록을 위해 Style ID 가져오기
-// '캐주얼 기본 코디' 스타일의 ID를 조회합니다.
-const casualStyle = await prisma.style.findFirst({
-  where: { title: "스트릿 감성 코디" },
-  select: { id: true },
-});
-
-if (casualStyle) {
-  const styleId = casualStyle.id;
-
-  // 3. Curation 데이터 삽입
-  await prisma.curation.createMany({
-    data: [
-      {
-        styleId: styleId, // 위에서 찾은 Style ID 사용
-        nickname: "Curator1",
-        content: "데일리룩으로 만점입니다!",
-        trendy: 5, // BigInt 타입 (숫자로 입력)
-        personality: 3,
-        practicality: 4,
-        costEffectiveness: 5,
-        createdAt: new Date(),
-        password: "curate_pass1",
-      },
-      {
-        styleId: styleId, // 같은 Style ID 사용
-        nickname: "Curator2",
-        content: "개성이 돋보이지만 가격은 조금 아쉽네요.",
-        trendy: 4,
-        personality: 5,
-        practicality: 3,
-        costEffectiveness: 4,
-        createdAt: new Date(),
-        password: "curate_pass2",
-      },
-    ],
-  });
-  console.log(`✅ Curation added for Style ID: ${styleId}`);
-} else {
-  console.log("⚠️ Target Style not found for Curation.");
 }
 
 main()
