@@ -54,16 +54,82 @@ async function main() {
       },
     ],
   });
+  console.log(`✅ Style added`);
+  // skipDuplicates: true, // 중복 방지
 
-  console.log("🌱 Seed data inserted successfully!");
+  // 2. Curation 등록을 위해 Style ID 가져오기
+  // '캐주얼 기본 코디' 스타일의 ID를 조회합니다.
+  const casualStyle = await prisma.style.findFirst({
+    where: { title: "스트릿 감성 코디" },
+    select: { id: true },
+  });
+
+  if (casualStyle) {
+    const styleId = casualStyle.id;
+
+    // 3. Curation 데이터 삽입
+    await prisma.curation.createMany({
+      data: [
+        {
+          styleId: styleId, // 위에서 찾은 Style ID 사용
+          nickname: "Curator1",
+          content: "데일리룩으로 만점입니다!",
+          trendy: 5, // BigInt 타입 (숫자로 입력)
+          personality: 3,
+          practicality: 4,
+          costEffectiveness: 5,
+          createdAt: new Date(),
+          password: "curate_pass1",
+        },
+        {
+          styleId: styleId, // 같은 Style ID 사용
+          nickname: "Curator2",
+          content: "개성이 돋보이지만 가격은 조금 아쉽네요.",
+          trendy: 4,
+          personality: 5,
+          practicality: 3,
+          costEffectiveness: 4,
+          createdAt: new Date(),
+          password: "curate_pass2",
+        },
+      ],
+    });
+    console.log(`✅ Curation added for Style ID: ${styleId}`);
+
+    // 4. 생성된 Curation 레코드 조회 (Reply 생성을 위해 ID 필요)
+    const curationWithReplyTarget = await prisma.curation.findFirst({
+      where: { nickname: "Curator1" },
+      select: { id: true },
+      // 여러 개가 있을 경우 가장 최근에 생성된 것을 가져오기 위해 orderBy를 추가할 수도 있습니다.
+      // orderBy: { createdAt: 'desc' }
+    });
+
+    // 5. Reply 데이터 삽입
+    if (curationWithReplyTarget) {
+      const curationIdForReply = curationWithReplyTarget.id;
+
+      // Curation ID 1개에 대해 Reply는 1개만 생성 가능 (1:1 관계 @unique 제약)
+      await prisma.reply.create({
+        data: {
+          curationId: curationIdForReply,
+          content: "감사합니다. 이 코디는 특히 신경 썼어요!",
+          nickname: "StyleCreator_Reply",
+          password: "reply_pass",
+        },
+      });
+      console.log(`✅ Reply added for (Curation ID: ${curationIdForReply}).`);
+    } else {
+      console.log("⚠️ Target Style not found for Curation.");
+    }
+  }
 }
-
 main()
-  .catch((err) => {
-    console.error("❌ Seed failed:");
-    console.error(err);
-    process.exit(1);
+  .then(() => {
+    console.log("🌱 Seed completed!");
+    prisma.$disconnect();
   })
-  .finally(async () => {
-    await prisma.$disconnect();
+  .catch((e) => {
+    console.error(e);
+    prisma.$disconnect();
+    process.exit(1);
   });
