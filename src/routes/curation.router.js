@@ -1,7 +1,5 @@
 import { Router } from "express";
 import curationController from "../controllers/curation.controller.js";
-import prisma from "../../prisma/prisma.js";
-import { ValidationError, NotFoundError } from "../utils/CustomError.js";
 import { validateRegisterCuration } from "../middleware/validation.middleware.js";
 
 // import replyRouter from "./reply.router.js";
