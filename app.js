@@ -5,7 +5,11 @@ import imageRouter from "./src/routes/image.router.js";
 import { errorHandler } from "./src/utils/errorHandler.js";
 import router from "./src/routes/style.router.js";
 import tagRouter from "./src/routes/tag.router.js";
+<<<<<<< HEAD
 import rankingRouter from "./src/routes/ranking.router.js";
+=======
+import replyRouter from "./routes/reply.router.js";
+>>>>>>> dcc1295 (중간점검)
 
 dotenv.config();
 
@@ -27,8 +31,12 @@ app.set("json replacer", bigIntToStringOrBypass);
 app.use("/curations", curationRouter);
 app.use("/styles", router);
 app.use("/tags", tagRouter);
+<<<<<<< HEAD
 app.use("/images", imageRouter);
 app.use("/ranking", rankingRouter);
+=======
+app.use("/", replyRouter);
+>>>>>>> dcc1295 (중간점검)
 
 app.get("/", (req, res) => {
   res.json({
