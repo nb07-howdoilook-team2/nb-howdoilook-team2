@@ -4,7 +4,7 @@ import { validateRegisterCuration } from "../middleware/validation.middleware.js
 import replyRouter from "./reply.router.js";
 
 const curationController = new CurationController();
-// import replyRouter from "./reply.router.js";
+
 // style.router.js에 // styleId 파라미터 경로에 curationRouter를 마운트
 // styleRouter.use("/:styleId/curations", curationRouter); => 작성 필요
 
@@ -12,7 +12,7 @@ const curationRouter = new Router({
    mergeParams: true, // 부모 라우터에서 전달되는 styleId 등의 파라미터를 사용하기 위해 필요
 });
 
-// 종속된 답글 라우터 => 라우터 이름 수정 필요
+// 종속된 답글 라우터
 curationRouter.use("/:curationId/comments", replyRouter);
 
 // 큐레이션 관련 라우팅 정의
