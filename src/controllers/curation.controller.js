@@ -116,12 +116,11 @@ const getCurationListController = async (req, res, next) => {
          keyword,
          pagination,
       });
-
       // 성공 응답 (200 OK)
       return res.status(200).json({
-         currentPage: result.currentPage,
-         totalPages: result.totalPages,
-         totalItemCount: result.totalItemCount,
+         currentPage: curationList.currentPage,
+         totalPages: curationList.totalPages,
+         totalItemCount: curationList.totalItemCount,
          data: curationList.data,
       });
    } catch (error) {

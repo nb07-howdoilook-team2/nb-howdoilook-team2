@@ -92,7 +92,7 @@ const deleteCuration = async (curationId, inputPassword) => {
 // ------------------------------------
 
 // (GET /styles/{styleId}/curations)
-const getCurationList = async ({ styleId, page, pageSize, searchBy, keyword }) => {
+const getCurationList = async ({ styleId, pagination, keyword }) => {
    // API 명세 (GET /styles/{styleId}/curations)에 따라 styleId는 필수 필터
    if (!styleId) {
       // 400 Error
