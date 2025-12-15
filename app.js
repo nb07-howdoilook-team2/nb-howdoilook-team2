@@ -5,7 +5,6 @@ import imageRouter from "./src/routes/image.router.js";
 import { errorHandler } from "./src/utils/errorHandler.js";
 import router from "./src/routes/style.router.js";
 import tagRouter from "./src/routes/tag.router.js";
-import replyRouter from './src/routes/reply.router.js';
 import rankingRouter from "./src/routes/ranking.router.js";
 
 dotenv.config();
@@ -16,10 +15,10 @@ app.use("/uploads", express.static("uploads"));
 
 // 💡 BigInt 처리 함수:
 const bigIntToStringOrBypass = (_, value) => {
-  if (typeof value === "bigint") {
-    return value.toString();
-  }
-  return value;
+   if (typeof value === "bigint") {
+      return value.toString();
+   }
+   return value;
 };
 app.set("json replacer", bigIntToStringOrBypass);
 
@@ -28,20 +27,19 @@ app.set("json replacer", bigIntToStringOrBypass);
 app.use("/curations", curationRouter);
 app.use("/styles", router);
 app.use("/tags", tagRouter);
-app.use("/", replyRouter);
 app.use("/images", imageRouter);
 app.use("/ranking", rankingRouter);
 
 app.get("/", (req, res) => {
-  res.json({
-    message: "RESTful API server",
-    endpoints: ["/styles", "/curations"],
-  });
+   res.json({
+      message: "RESTful API server",
+      endpoints: ["/styles", "/curations"],
+   });
 });
 app.use(errorHandler);
 
 // const apiPort = process.env.API_PORT || 3000;
 
 app.listen(3000, () => {
-  console.log(`떴다`);
+   console.log(`떴다`);
 });

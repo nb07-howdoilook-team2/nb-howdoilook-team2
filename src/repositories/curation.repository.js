@@ -67,6 +67,14 @@ const curationRepository = {
       });
    },
    // ------------------------------------
+   // 큐레이션 개수 조회 (COUNT)
+   // ------------------------------------
+   count: async ({ where }) => {
+      return prisma.curation.count({
+         where: where,
+      });
+   },
+   // ------------------------------------
    // 큐레이팅 목록 조회 (READ LIST)
    // ------------------------------------
    findList: async ({ where, skip = 0, take = 10, orderBy = { createdAt: "desc" } }) => {
@@ -87,7 +95,7 @@ const curationRepository = {
             createdAt: true,
 
             // 큐레이팅에 남겨진 답글도 같이 조회됩니다.
-            comment: {
+            reply: {
                // 관계 이름이 'comment'라고 가정
                select: {
                   id: true,
