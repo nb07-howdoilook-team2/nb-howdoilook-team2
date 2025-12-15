@@ -5,6 +5,7 @@ import imageRouter from "./src/routes/image.router.js";
 import { errorHandler } from "./src/utils/errorHandler.js";
 import router from "./src/routes/style.router.js";
 import tagRouter from "./src/routes/tag.router.js";
+import replyRouter from './src/routes/reply.router.js';
 import rankingRouter from "./src/routes/ranking.router.js";
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.set("json replacer", bigIntToStringOrBypass);
 app.use("/curations", curationRouter);
 app.use("/styles", router);
 app.use("/tags", tagRouter);
+app.use("/", replyRouter);
 app.use("/images", imageRouter);
 app.use("/ranking", rankingRouter);
 
