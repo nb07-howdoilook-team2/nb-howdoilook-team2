@@ -9,7 +9,7 @@ export class CustomError extends Error {
 
 export class HttpError extends CustomError {
   constructor(statusCode, message) {
-    super(message);
+    super(message, statusCode);
     this.statusCode = statusCode;
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);

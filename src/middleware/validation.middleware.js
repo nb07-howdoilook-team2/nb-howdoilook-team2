@@ -167,3 +167,58 @@ export const validateRegisterCuration = (req, res, next) => {
     next(error);
   }
 };
+
+export const validateGetStylesList = (req, res, next) => {
+  const { page, limit, sort, search } = req.query;
+  const maxLimit = 50; //한페이지 최대 허용 개수
+  const allowedSort = ["latest", "viewCount", "curationCount"]; //허용 정렬기준
+  const maxSearchLength = 50; //검색어 최대 길이
+
+  // 페이지 검사: 숫자이면서 1 이상의 수인지 검사
+  if (page && (!/^\d+$/.test(page) || Number(page) <= 0)) {
+    throw new ValidationError("page는 1 이상의 숫자여야 합니다.");
+  }
+
+  // limit이 숫자이면서 0보다 큰수인지 검사
+  if (limit && (!/^\d+$/.test(limit) || Number(limit) <= 0)) {
+    throw new ValidationError("limit는 1 이상의 숫자여야 합니다.");
+  }
+
+  // 한페이지 최대 허용 개수 검사
+  if (limit && Number(limit) > maxLimit) {
+    throw new ValidationError(`limit은 최대 ${maxLimit}까지 허용됩니다.`);
+  }
+
+  // 정렬기준 검사
+  if (sort && !allowedSort.includes(sort)) {
+    throw new ValidationError(
+      `sort는 ${allowedSort.join(", ")}중 하나여야 합니다.`
+    );
+  }
+
+  // 검색어 검사
+  if (search !== undefined) {
+    // 검색어 타입 검사
+    if (typeof search !== "string") {
+      throw new ValidationError("search는 문자열이어야 합니다.");
+    }
+
+    // 검색어 최대 길이 검사
+    if (search.length > maxSearchLength) {
+      throw new ValidationError(
+        `search는 최대 ${maxSearchLength}자까지 허용됩니다.`
+      );
+    }
+  }
+  next();
+};
+
+export const validateFindStyle = (req, res, next) => {
+  const { styleId } = req.params;
+
+  // styleId가 숫자인지 검사
+  if (!/^\d+$/.test(styleId)) {
+    throw new ValidationError("styleId는 숫자여야 합니다.");
+  }
+  next();
+};

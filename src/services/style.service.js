@@ -1,6 +1,7 @@
 import prisma from "../../prisma/prisma.js";
 import { Style, StyleDetail } from "../models/Style.js";
 import StyleRepository from "../repositories/style.repository.js";
+import { NotFoundError } from "../utils/CustomError.js";
 
 class StyleService {
   //목록조회, 오프셋페이지네이션, 검색, 정렬기준
@@ -48,10 +49,14 @@ class StyleService {
   //상세조회
   findStyle = async (styleId) => {
     const style = await StyleRepository.getFindStyle(styleId);
+
+    // 스타일이 존재하지 않으면 NotFoundError 발생
+    if (!style) {
+      throw new NotFoundError("해당 스타일을 찾을 수 없습니다.");
+    }
+
     // 조회수 증가
     await StyleRepository.increaseViewCount(styleId);
-    // id가 존재하지 않으면 null 반환
-    if (!style) return null;
 
     // API 명세서 형식에 맞추기(캡슐화)
     return StyleDetail.fromEntity(style);

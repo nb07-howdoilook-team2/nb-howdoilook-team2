@@ -34,20 +34,7 @@ class StyleController {
       // 경로 파라미터에서 스타일 ID 추출
       const styleId = req.params.styleId;
 
-      // styleId가 숫자가 아닌 경우 400 Bad Request 반환
-      // styleId가 문자열 전체가 숫자로 이루어져 있는지 정규식으로 검사
-      if (!/^\d+$/.test(styleId)) {
-        return res.status(400).json({ message: "styleId는 숫자여야 합니다" });
-      }
-
       const findStyle = await StyleService.findStyle(styleId);
-
-      // 스타일이 존재하지 않는 경우 404 Not Found 반환
-      if (!findStyle) {
-        return res
-          .status(404)
-          .json({ message: "해당 스타일을 찾을 수 없습니다" });
-      }
       return res.status(200).json(findStyle);
     } catch (e) {
       next(e);
