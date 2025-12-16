@@ -17,6 +17,9 @@ const parsePagination = (query) => {
 // CurationController 클래스 구현
 // ------------------------------------
 class CurationController {
+   // ------------------------------------
+   // 1. 큐레이팅 등록 (POST)
+   // ------------------------------------
    createCurationController = async (req, res, next) => {
       try {
          // 스타일 ID는 경로에서, 나머지 데이터는 본문에서 추출
@@ -129,11 +132,5 @@ class CurationController {
       }
    };
 }
-// ------------------------------------
-// 1. 큐레이팅 등록 (POST)
-// ------------------------------------
 
-// ------------------------------------
-// 컨트롤러 모듈 내보내기
-// ------------------------------------
 export default CurationController;
