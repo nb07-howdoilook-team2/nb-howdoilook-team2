@@ -11,22 +11,25 @@ datasource db {
 }
 
 model Style {
-  id              BigInt    @id @default(autoincrement())
-  nickname        String
-  title           String
-  content         String
-  password        String
-  thumbnail       String?
-  categories      Json
-  tags            String[]  @default([])
-  imageUrls       String[]  @default([])
-  viewCount       Int       @default(0)
-  curationCount   Int       @default(0)
-  rating          Float     @default(0)
+  id                       BigInt    @id @default(autoincrement())
+  nickname                 String
+  title                    String
+  content                  String
+  password                 String
+  thumbnail                String?
+  categories               Json
+  tags                     String[]  @default([])
+  imageUrls                String[]  @default([])
+  viewCount                Int       @default(0)
+  curationCount            Int       @default(0)
+  ratingTotal              Float   @default(0)
+  ratingTrendy             Float   @default(0)
+  ratingPersonality        Float   @default(0)
+  ratingPracticality       Float   @default(0)
+  ratingCostEffectiveness  Float @default(0)
   createdAt       DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt       DateTime? @updatedAt @db.Timestamptz(6)
   curations       Curation[]
-
 }
 
 model Curation {

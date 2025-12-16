@@ -1,8 +1,8 @@
 import express from "express";
-import { rankingController } from "../controllers/ranking.controller.js";
+import { getRankingController } from "../controllers/ranking.controller.js";
 
 const rankingRouter = express.Router();
 
-rankingRouter.get("/", rankingController);
+rankingRouter.get("/", getRankingController);
 
 export default rankingRouter;

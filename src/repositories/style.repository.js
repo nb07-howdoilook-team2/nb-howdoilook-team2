@@ -33,6 +33,37 @@ class StyleRepository {
       },
     });
   };
+
+  updateStyleRatings = async (styleId, data) => {
+    return prisma.style.update({
+      where: { id: BigInt(styleId) },
+      data,
+    });
+  };
+
+  countAll = async () => {
+    return prisma.style.count();
+  };
+
+  findRankingList = async ({ skip, limit, orderBy }) => {
+    return prisma.style.findMany({
+      skip,
+      take: limit,
+      orderBy,
+      select: {
+        id: true,
+        thumbnail: true,
+        nickname: true,
+        title: true,
+        tags: true,
+        categories: true,
+        viewCount: true,
+        curationCount: true,
+        createdAt: true,
+        ratingTotal: true,
+      },
+    });
+  };
 }
 
 export default new StyleRepository();
