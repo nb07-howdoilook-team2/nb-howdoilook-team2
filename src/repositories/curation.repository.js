@@ -95,7 +95,7 @@ const curationRepository = {
             createdAt: true,
 
             // 큐레이팅에 남겨진 답글도 같이 조회됩니다.
-            reply: {
+            comment: {
                // 관계 이름이 'comment'라고 가정
                select: {
                   id: true,

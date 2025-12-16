@@ -44,7 +44,7 @@ model Curation {
   costEffectiveness Int      
   createdAt         DateTime @default(now()) @db.Timestamptz(6)
   password          String   
-  reply             Reply?   @relation(name: "CurationToReply") 
+  comment           Reply?   @relation(name: "CurationToReply") 
 }
 
 model Reply {
