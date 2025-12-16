@@ -7,7 +7,7 @@ import router from "./src/routes/style.router.js";
 import tagRouter from "./src/routes/tag.router.js";
 import replyRouter from './src/routes/reply.router.js';
 import rankingRouter from "./src/routes/ranking.router.js";
-import replyRouter from "./src/routes/reply.router.js";
+
 
 dotenv.config();
 
