@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  //url      = env("DATABASE_URL")
+}
+
+model Style {
+  id              BigInt    @id @default(autoincrement())
+  nickname        String
+  title           String
+  content         String
+  password        String
+  thumbnail       String?
+  categories      Json
+  tags            String[]  @default([])
+  imageUrls       String[]  @default([])
+  viewCount       Int       @default(0)
+  curationCount   Int       @default(0)
+  rating          Float     @default(0)
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime? @updatedAt @db.Timestamptz(6)
+  curations       Curation[]
+
+}
+
+model Curation {
+  id                BigInt      @id @default(autoincrement())
+
+  styleId           BigInt
+  style             Style    @relation(fields: [styleId], references: [id])
+
+  nickname          String
+  content           String
+
+  trendy            Int      
+  personality       Int      
+  practicality      Int      
+  costEffectiveness Int      
+  createdAt         DateTime @default(now()) @db.Timestamptz(6)
+  password          String   
+  reply             Reply?   @relation(name: "CurationToReply") 
+}
+
+model Reply {
+  id          BigInt      @id @default(autoincrement())
+  curationId  BigInt      @unique
+  content     String
+  nickname    String?
+  password    String
+  createdAt   DateTime @default(now())
+  
+  curation    Curation @relation(name: "CurationToReply", fields: [curationId], references: [id])
+}
