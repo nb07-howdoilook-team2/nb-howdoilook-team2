@@ -1,7 +1,7 @@
 import prisma from "../../prisma/prisma.js";
 import { Style, StyleDetail } from "../models/Style.js";
 import StyleRepository from "../repositories/style.repository.js";
-import { NotFoundError } from "../utils/CustomError.js";
+import { ForbiddenError, NotFoundError } from "../utils/CustomError.js";
 
 class StyleService {
   //목록조회, 오프셋페이지네이션, 검색, 정렬기준
@@ -102,53 +102,56 @@ class StyleService {
     });
     return newStyle;
   };
+
+  // 스타일 수정
+  updateStyle = async (styleId, password, updateData) => {
+    // 1. 해당 스타일 존재 여부 확인
+    const style = await StyleRepository.getFindStyle(styleId);
+    if (!style) {
+      throw new NotFoundError("존재하지 않는 스타일입니다.");
+    }
+
+    // 2. 비밀번호 검증 (DB에 저장된 비밀번호와 비교)
+    // 현재 스키마에는 비밀번호 필드가 String으로 되어있어 단순 비교로 처리
+    if (style.password !== password) {
+      throw new ForbiddenError("비밀번호가 일치하지 않습니다.");
+    }
+
+    // 3. 썸네일 필드 업데이트 처리
+    if (updateData.imageUrls && updateData.imageUrls.length > 0) {
+      updateData.thumbnail = updateData.imageUrls[0];
+    } else if (updateData.imageUrls) {
+      updateData.thumbnail = null;
+    }
+
+    // 4. 수정 진행
+    const { password: _, ...dataToUpdate } = updateData;
+
+    const updatedStyleEntity = await StyleRepository.updateStyle(
+      styleId,
+      dataToUpdate
+    );
+
+    // API 명세서 형식에 맞추어 StyleDetail 인스턴스로 변환 후 반환
+    return StyleDetail.fromEntity(updatedStyleEntity);
+  };
+
+  // 스타일 삭제
+  deleteStyle = async (styleId, password) => {
+    const style = await StyleRepository.getFindStyle(styleId);
+    if (!style) {
+      throw new NotFoundError("존재하지 않는 스타일입니다.");
+    }
+
+    // 2. 비밀번호 검증
+    if (style.password !== password) {
+      throw new ForbiddenError("비밀번호가 일치하지 않습니다.");
+    }
+
+    const deletedStyle = await StyleRepository.deleteStyle(styleId);
+
+    return deletedStyle;
+  };
 }
 
 export default new StyleService();
-// // 스타일 수정 로직
-// updateStyle = async (styleId, password, updateData) => {
-//   // 1. 해당 스타일 존재 여부 확인
-//   const style = await this.styleRepository.findStyleById(styleId);
-//   if (!style) {
-//     throw new CustomError(404, "존재하지 않는 스타일입니다.");
-//   }
-
-//   // 2. 비밀번호 검증 (단순 문자열 비교 예시, 실제 서비스에선 해시 비교 권장)
-//   if (style.password !== password) {
-//     throw new CustomError(403, "비밀번호가 일치하지 않습니다.");
-//   }
-
-//   // 3. 수정 진행
-//   const updatedStyle = await this.styleRepository.updateStyle(
-//     styleId,
-//     updateData
-//   );
-
-//   return updatedStyle;
-// };
-
-// // 스타일 삭제 로직
-// deleteStyle = async (styleId, password) => {
-//   // 1. 해당 스타일 존재 여부 확인
-//   const style = await this.styleRepository.findStyleById(styleId);
-//   if (!style) {
-//     throw new CustomError(404, "존재하지 않는 스타일입니다.");
-//   }
-
-//   // 2. 비밀번호 검증
-//   if (style.password !== password) {
-//     throw new CustomError(403, "비밀번호가 일치하지 않습니다.");
-//   }
-
-//   // 3. 삭제 진행
-//   const deletedStyle = await this.styleRepository.deleteStyle(styleId);
-
-//   return deletedStyle;
-// };
-
-// updateStyle = async (styleId, password, updateData) => {
-//   /* ... */
-// };
-// deleteStyle = async (styleId, password) => {
-//   /* ... */
-// };

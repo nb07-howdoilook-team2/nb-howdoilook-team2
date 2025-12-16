@@ -1,44 +1,55 @@
 import { ReplyService } from "../services/reply.service.js";
 
 export class ReplyController {
-   replyService = new ReplyService();
+  constructor() {
+    this.replyService = new ReplyService();
 
-   createReply = async (req, res, next) => {
-      try {
-         const { curationId } = req.params;
-         const { content, password, nickname } = req.body;
+    // ⭐️ 바인딩 필수
+    this.createReply = this.createReply.bind(this);
+    this.updateReply = this.updateReply.bind(this);
+    this.deleteReply = this.deleteReply.bind(this);
+  }
 
-         const data = await this.replyService.createReply(curationId, content, password, nickname);
+  async createReply(req, res, next) {
+    try {
+      const { curationId } = req.params;
+      const { content, password } = req.body;
 
-         return res.status(200).json(data);
-      } catch (error) {
-         next(error);
-      }
-   };
+      const data = await this.replyService.createReply(
+        curationId,
+        content,
+        password
+      );
 
-   updateReply = async (req, res, next) => {
-      try {
-         const { commentId } = req.params;
-         const { content, password } = req.body;
+      return res.status(201).json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateReply(req, res, next) {
+    try {
+      const { commentId } = req.params;
+      const { content, password } = req.body;
 
          const data = await this.replyService.updateReply(commentId, content, password);
 
-         return res.status(200).json(data);
-      } catch (error) {
-         next(error);
-      }
-   };
+      return res.status(200).json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
 
-   deleteReply = async (req, res, next) => {
-      try {
-         const { commentId } = req.params;
-         const { password } = req.body;
+  async deleteReply(req, res, next) {
+    try {
+      const { commentId } = req.params;
+      const { password } = req.body;
 
          const message = await this.replyService.deleteReply(commentId, password);
 
-         return res.status(200).json({ message });
-      } catch (error) {
-         next(error);
-      }
-   };
+      return res.status(200).json({ message });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

@@ -23,6 +23,22 @@ class StyleRepository {
     });
   };
 
+  // 스타일 수정
+  updateStyle = async (styleId, updateData) => {
+    // updateData에는 password가 포함되지 않아야 합니다.
+    return await prisma.style.update({
+      where: { id: BigInt(styleId) },
+      data: updateData,
+    });
+  };
+
+  // 스타일 삭제
+  deleteStyle = async (styleId) => {
+    return await prisma.style.delete({
+      where: { id: BigInt(styleId) },
+    });
+  };
+
   // 조회 수 증가
   increaseViewCount = async (styleId) => {
     // 상세조회로 들어오면 스타일 ID에 해당하는 조회수 1 증가
@@ -67,20 +83,3 @@ class StyleRepository {
 }
 
 export default new StyleRepository();
-
-// // 스타일 수정
-// updateStyle = async (styleId, updateData) => {
-//   const updatedStyle = await this.prisma.style.update({
-//     where: { id: +styleId },
-//     data: updateData,
-//   });
-//   return updatedStyle;
-// };
-
-// // 스타일 삭제
-// deleteStyle = async (styleId) => {
-//   const deletedStyle = await this.prisma.style.delete({
-//     where: { id: +styleId },
-//   });
-//   return deletedStyle;
-// };

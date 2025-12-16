@@ -222,3 +222,95 @@ export const validateFindStyle = (req, res, next) => {
   }
   next();
 };
+
+// 스타일 수정 요청 본문 유효성 검사
+export const validateUpdateStyle = (req, res, next) => {
+  const { title, nickname, content, password, imageUrls, tags, categories } =
+    req.body;
+
+  try {
+    // 1. 비밀번호 검증
+    if (!password) {
+      throw new ValidationError("비밀번호는 필수 입력 항목입니다.");
+    }
+
+    // 2. 최소한 하나의 수정 데이터가 있는지 검사
+    const updateFields = {
+      title,
+      nickname,
+      content,
+      imageUrls,
+      tags,
+      categories,
+    };
+    const hasUpdateData = Object.values(updateFields).some(
+      (value) => value !== undefined
+    );
+
+    if (!hasUpdateData) {
+      throw new ValidationError("수정할 내용을 하나 이상 입력해야 합니다.");
+    }
+
+    // 3. 태그 개수 검증
+    if (tags && tags.length > 3) {
+      throw new ValidationError("태그는 최대 3개까지만 등록할 수 있습니다.");
+    }
+
+    // 4. Categories (스타일 구성) 구조 검증
+    if (categories !== undefined) {
+      if (typeof categories !== "object" || Array.isArray(categories)) {
+        throw new ValidationError(
+          "categories는 객체 형태로 전달되어야 합니다."
+        );
+      }
+
+      const categoryKeys = Object.keys(categories);
+      if (categoryKeys.length === 0) {
+        throw new ValidationError("categories에 유효한 아이템이 없습니다.");
+      }
+
+      for (const key of categoryKeys) {
+        if (ALLOWED_ITEM_TYPES.includes(key)) {
+          const item = categories[key];
+          if (item) {
+            validateCategoryItem(item, key);
+          }
+        } else {
+          throw new ValidationError(
+            `허용되지 않은 스타일 구성 타입입니다: ${key}`
+          );
+        }
+      }
+    }
+
+    // 5. imageUrls 검증
+    if (
+      imageUrls !== undefined &&
+      (imageUrls.length === 0 || !Array.isArray(imageUrls))
+    ) {
+      throw new ValidationError(
+        "imageUrls는 빈 배열일 수 없으며 배열 형태여야 합니다."
+      );
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+// 스타일 삭제 요청 본문 유효성 검사
+export const validateDeleteStyle = (req, res, next) => {
+  const { password } = req.body;
+  try {
+    if (!password) {
+      throw new ValidationError("비밀번호는 필수 입력 항목입니다.");
+    }
+    if (typeof password !== "string" || password.trim().length === 0) {
+      throw new ValidationError("비밀번호는 유효한 문자열이어야 합니다.");
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};

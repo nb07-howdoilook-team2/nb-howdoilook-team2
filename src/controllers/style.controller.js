@@ -74,52 +74,43 @@ class StyleController {
       next(error);
     }
   };
+
+  // PUT /style: 스타일 게시물을 수정합니다.
+  updateStyle = async (req, res, next) => {
+    try {
+      const styleId = req.params.styleId;
+      const { password, ...updateData } = req.body;
+
+      // 서비스 레이어 호출 및 수정 진행
+      const updatedStyle = await StyleService.updateStyle(
+        styleId,
+        password,
+        updateData
+      );
+
+      // API 응답 스펙에 맞춰 StyleDetail 형식의 수정된 객체 반환
+      return res.status(200).json(updatedStyle);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // DELETE /style: 스타일 게시물을 삭제합니다.
+  deleteStyle = async (req, res, next) => {
+    try {
+      const styleId = req.params.styleId;
+      const { password } = req.body;
+
+      const deletedStyle = await StyleService.deleteStyle(styleId, password);
+
+      return res.status(200).json({
+        message: "스타일이 성공적으로 삭제되었습니다.",
+        id: deletedStyle.id.toString(),
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default new StyleController();
-
-// // 스타일 수정 API
-// updateStyle = async (req, res, next) => {
-//    try {
-//       const { id } = req.params;
-//       const { password, ...updateData } = req.body; // password와 나머지 수정 데이터 분리
-
-//       if (!password) {
-//          throw new Error("비밀번호를 입력해주세요."); // 혹은 CustomError 사용
-//       }
-
-//       const updatedStyle = await this.styleService.updateStyle(id, password, updateData);
-
-//       return res.status(200).json({ data: updatedStyle });
-//    } catch (error) {
-//       next(error); // Global Error Handler로 전달
-//    }
-// };
-
-// // 스타일 삭제 API
-// deleteStyle = async (req, res, next) => {
-//    try {
-//       const { id } = req.params;
-//       const { password } = req.body;
-
-//       if (!password) {
-//          throw new Error("비밀번호를 입력해주세요.");
-//       }
-
-//       const deletedStyle = await this.styleService.deleteStyle(id, password);
-
-//       return res.status(200).json({
-//          message: "스타일이 삭제되었습니다.",
-//          id: deletedStyle.id,
-//       });
-//    } catch (error) {
-//       next(error); // Global Error Handler로 전달
-//    }
-// };
-
-// updateStyle = async (req, res, next) => {
-//    /* ... */
-// };
-// deleteStyle = async (req, res, next) => {
-//    /* ... */
-// };

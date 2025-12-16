@@ -6,13 +6,14 @@ import { errorHandler } from "./src/utils/errorHandler.js";
 import router from "./src/routes/style.router.js";
 import tagRouter from "./src/routes/tag.router.js";
 import rankingRouter from "./src/routes/ranking.router.js";
+import replyRouter from "./src/routes/reply.router.js";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
-
+app.use("/comments", replyRouter);
 // 💡 BigInt 처리 함수:
 const bigIntToStringOrBypass = (_, value) => {
    if (typeof value === "bigint") {
@@ -29,6 +30,7 @@ app.use("/styles", router);
 app.use("/tags", tagRouter);
 app.use("/images", imageRouter);
 app.use("/ranking", rankingRouter);
+app.use("/", replyRouter);
 
 app.get("/", (req, res) => {
    res.json({

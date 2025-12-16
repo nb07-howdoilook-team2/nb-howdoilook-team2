@@ -36,7 +36,7 @@ model Curation {
   id                BigInt      @id @default(autoincrement())
 
   styleId           BigInt
-  style             Style    @relation(fields: [styleId], references: [id])
+  style             Style    @relation(fields: [styleId], references: [id], onDelete: Cascade)
 
   nickname          String
   content           String
@@ -47,7 +47,7 @@ model Curation {
   costEffectiveness Int      
   createdAt         DateTime @default(now()) @db.Timestamptz(6)
   password          String   
-  reply             Reply?   @relation(name: "CurationToReply") 
+  comment           Reply?   @relation(name: "CurationToReply") 
 }
 
 model Reply {
@@ -58,5 +58,5 @@ model Reply {
   password    String
   createdAt   DateTime @default(now())
   
-  curation    Curation @relation(name: "CurationToReply", fields: [curationId], references: [id])
+  curation    Curation @relation(name: "CurationToReply", fields: [curationId], references: [id], onDelete: Cascade)
 }
