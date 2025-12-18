@@ -17,7 +17,7 @@ class StyleRepository {
   };
 
   // 상세조희, 조회수 상승
-  findStyle = async (styleId) => {
+  getFindStyle = async (styleId) => {
     return prisma.style.findUnique({
       where: { id: BigInt(styleId) },
       include: {
