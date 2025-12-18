@@ -5,7 +5,7 @@ import { ForbiddenError, NotFoundError } from "../utils/CustomError.js";
 
 class StyleService {
   //목록조회, 오프셋페이지네이션, 검색, 정렬기준
-  getStyles = async ({ page, limit, sort, search }) => {
+  getStyles = async ({ page, limit, sort, searchBy, keyword, tag }) => {
     const skip = (page - 1) * limit;
 
     //정렬기준
@@ -14,15 +14,36 @@ class StyleService {
     if (sort === "curationCount") orderByOption = { curationCount: "desc" };
 
     const where = {};
-    // 검색어가 들어왔을때 제목, 닉네임, 내용, 태그에 대해 검색
-    // 빈 문자열("")이면 모두 조회되도록 처리
-    if (search && search.trim() !== "") {
-      where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { nickname: { contains: search, mode: "insensitive" } },
-        { content: { contains: search, mode: "insensitive" } },
-        { tags: { has: search } },
-      ];
+
+    if (tag && tag.trim() !== "") {
+      where.tags = { has: tag.trim() };
+    }
+
+    if (keyword && keyword.trim() !== "") {
+      const trimmed = keyword.trim();
+
+      switch (searchBy) {
+        case "nickname":
+          where.nickname = { contains: trimmed, mode: "insensitive" };
+          break;
+        case "title":
+          where.title = { contains: trimmed, mode: "insensitive" };
+          break;
+        case "content":
+          where.content = { contains: trimmed, mode: "insensitive" };
+          break;
+        case "tag":
+          where.tags = { has: trimmed };
+          break;
+        default:
+          // 전체 검색: 닉네임, 제목, 상세, 태그 모두 검색
+          where.OR = [
+            { nickname: { contains: trimmed, mode: "insensitive" } },
+            { title: { contains: trimmed, mode: "insensitive" } },
+            { content: { contains: trimmed, mode: "insensitive" } },
+            { tags: { has: trimmed } },
+          ];
+      }
     }
 
     // 게시글 총 개수 가져오기
@@ -48,18 +69,14 @@ class StyleService {
 
   //상세조회
   findStyle = async (styleId) => {
-    const style = await StyleRepository.getFindStyle(styleId);
+    try {
+      const style = await StyleRepository.getFindStyle(styleId);
 
-    // 스타일이 존재하지 않으면 NotFoundError 발생
-    if (!style) {
+      // API 명세서 형식에 맞추기(캡슐화)
+      return StyleDetail.fromEntity(style);
+    } catch (e) {
       throw new NotFoundError("해당 스타일을 찾을 수 없습니다.");
     }
-
-    // 조회수 증가
-    await StyleRepository.increaseViewCount(styleId);
-
-    // API 명세서 형식에 맞추기(캡슐화)
-    return StyleDetail.fromEntity(style);
   };
 
   //스타일 작성

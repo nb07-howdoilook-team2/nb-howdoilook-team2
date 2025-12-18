@@ -6,6 +6,8 @@ export const popularTags = async () => {
   const tagCount = {};
 
   styles.forEach((style) => {
+    if (!Array.isArray(style.tags)) return;
+
     style.tags.forEach((tag) => {
       tagCount[tag] = (tagCount[tag] || 0) + 1;
     });
