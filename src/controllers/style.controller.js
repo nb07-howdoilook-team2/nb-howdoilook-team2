@@ -8,14 +8,36 @@ class StyleController {
   getStyles = async (req, res, next) => {
     try {
       // 쿼리 파라미터에서 페이지, 한 페이지당 아이템 수, 정렬기준, 검색어 추출
-      const { page = 1, limit = 10, sort = "latest", search } = req.query;
+      const {
+        page = 1,
+        limit = 10,
+        sortBy = "latest",
+        searchBy,
+        keyword,
+        tag,
+      } = req.query;
+
+      const sortMap = {
+        latest: "latest", // 기본값
+        mostViewed: "viewCount",
+        mostCurated: "curationCount",
+      };
+
+      const sort = sortMap[sortBy] || "latest";
+
+      const allowedSearchBy = ["all", "nickname", "title", "content", "tag"];
+      const safeSearchBy = allowedSearchBy.includes(searchBy)
+        ? searchBy
+        : "all";
 
       // 서비스 레이어의 getStylesService 함수 호출
       const styles = await StyleService.getStyles({
         page: Number(page),
         limit: Number(limit),
         sort,
-        search,
+        searchBy: safeSearchBy,
+        keyword,
+        tag,
       });
 
       // response로 스타일 목록 반환

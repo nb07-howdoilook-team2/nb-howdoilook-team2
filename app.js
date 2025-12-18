@@ -16,10 +16,10 @@ app.use("/uploads", express.static("uploads"));
 app.use("/comments", replyRouter);
 // 💡 BigInt 처리 함수:
 const bigIntToStringOrBypass = (_, value) => {
-   if (typeof value === "bigint") {
-      return value.toString();
-   }
-   return value;
+  if (typeof value === "bigint") {
+    return value.toString();
+  }
+  return value;
 };
 app.set("json replacer", bigIntToStringOrBypass);
 
@@ -33,15 +33,15 @@ app.use("/ranking", rankingRouter);
 app.use("/", replyRouter);
 
 app.get("/", (req, res) => {
-   res.json({
-      message: "RESTful API server",
-      endpoints: ["/styles", "/curations"],
-   });
+  res.json({
+    message: "RESTful API server",
+    endpoints: ["/styles", "/curations"],
+  });
 });
 app.use(errorHandler);
 
-// const apiPort = process.env.API_PORT || 3000;
+const apiPort = process.env.API_PORT || 3001;
 
-app.listen(3000, () => {
-   console.log(`떴다`);
+app.listen(apiPort, () => {
+  console.log(`Server is running on port ${apiPort}`);
 });

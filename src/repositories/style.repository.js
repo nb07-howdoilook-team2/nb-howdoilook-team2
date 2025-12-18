@@ -16,10 +16,11 @@ class StyleRepository {
     return prisma.style.count({ where }); // 조건에 맞는 스타일 총 개수 반환
   };
 
-  // 상세조희
-  getFindStyle = async (styleId) => {
-    return await prisma.style.findUnique({
-      where: { id: BigInt(styleId) }, // ID BIGINT 변환
+  // 상세조희, 조회수 상승
+  findStyleAndIncreaseView = async (styleId) => {
+    return await prisma.style.update({
+      where: { id: BigInt(styleId) },
+      data: { viewCount: { increment: 1 } },
     });
   };
 
@@ -76,7 +77,13 @@ class StyleRepository {
         viewCount: true,
         curationCount: true,
         createdAt: true,
-        ratingTotal: true,
+
+        // 랭킹에 필요한 점수 전부
+        ratingTotal: true, // 총점
+        ratingTrendy: true, // 트렌디 점수
+        ratingPersonality: true, // 개성 점수
+        ratingPracticality: true, // 실용성 점수
+        ratingCostEffectiveness: true, // 가성비 점수
       },
     });
   };
