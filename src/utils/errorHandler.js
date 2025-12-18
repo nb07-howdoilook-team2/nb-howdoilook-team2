@@ -1,3 +1,4 @@
+// src/utils/errorHandler.js
 import { CustomError } from "./CustomError.js";
 
 export const errorHandler = (err, req, res, next) => {

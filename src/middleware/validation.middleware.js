@@ -134,33 +134,36 @@ export const validateRegisterCuration = (req, res, next) => {
       ) {
         throw new ValidationError(`${name}을(를) 입력해 주세요.`); // 400 Bad Request
       }
-    }
-    // 2. 데이터 타입 및 형식 검사
-    // 2-1. 점수 필드 검사 (변수명 수정: trendy, personality 등 사용)
-    const scoreFields = [
-      { value: trendy, name: "트렌디 점수" },
-      { value: personality, name: "개성 점수" },
-      { value: practicality, name: "실용성 점수" },
-      { value: costEffectiveness, name: "가성비 점수" },
-    ];
-
-    for (const { value, name } of scoreFields) {
-      const score = Number(value);
-      if (isNaN(score) || score < 0 || score > 10) {
-        throw new ValidationError(`${name}는 0부터 10 사이의 숫자여야 합니다.`);
+      // 2. 데이터 타입 및 형식 검사
+      // 2-1. 점수 필드 검사 (숫자형, 0~10 범위)
+      const scoreFields = [
+        // score는 FE에서 순수한 숫자로만 옴
+        { value: trendy, name: "트렌디 점수" },
+        { value: personality, name: "개성 점수" },
+        { value: practicality, name: "실용성 점수" },
+        { value: costEffectiveness, name: "가성비 점수" },
+      ];
+      for (const { value, name } of scoreFields) {
+        const score = Number(value);
+        if (isNaN(score) || score < 0 || score > 10) {
+          throw new ValidationError(
+            `${name}는 0부터 10 사이의 유효한 숫자여야 합니다.`
+          );
+        }
       }
     }
 
-    // 2-2. 문자열 필드 검사 (변수명 수정: content, nickname 사용)
+    // 2-2. 문자열 필드 검사
     if (typeof content !== "string" || content.trim().length === 0) {
       throw new ValidationError("한줄 큐레이팅은 빈 문자열일 수 없습니다.");
     }
     if (typeof nickname !== "string" || nickname.trim().length === 0) {
       throw new ValidationError("게시자 닉네임은 빈 문자열일 수 없습니다.");
     }
-
+    // 모든 검증 통과
     next();
   } catch (error) {
+    // 에러 발생 시 Express의 Global Error Handler로 전달
     next(error);
   }
 };
