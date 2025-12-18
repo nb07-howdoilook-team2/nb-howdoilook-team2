@@ -82,8 +82,12 @@ export class StyleDetail {
       curationCount: entity.curationCount,
       createdAt: entity.createdAt,
       categories: normalizeCategories(entity.categories),
-      tags: entity.tags ?? [],
-      imageUrls: entity.imageUrls ?? [],
+      tags: Array.isArray(entity.tags)
+        ? entity.tags
+        : (entity.tags?.split(",") ?? []),
+      imageUrls: Array.isArray(entity.imageUrls)
+        ? entity.imageUrls
+        : (entity.imageUrls?.split(",") ?? []),
       curations: entity.curations ?? [],
     });
   }

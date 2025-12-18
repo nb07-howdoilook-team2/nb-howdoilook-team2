@@ -21,6 +21,19 @@ class StyleRepository {
     return await prisma.style.update({
       where: { id: BigInt(styleId) },
       data: { viewCount: { increment: 1 } },
+      select: {
+        id: true,
+        nickname: true,
+        title: true,
+        content: true,
+        viewCount: true,
+        curationCount: true,
+        createdAt: true,
+        categories: true,
+        tags: true,
+        imageUrls: true,
+        curations: true,
+      },
     });
   };
 
