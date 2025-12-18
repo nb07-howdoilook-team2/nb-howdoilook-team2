@@ -69,14 +69,16 @@ class StyleService {
 
   //상세조회
   findStyle = async (styleId) => {
-    try {
-      const style = await StyleRepository.getFindStyle(styleId);
+    const style = await StyleRepository.getFindStyle(styleId);
 
-      // API 명세서 형식에 맞추기(캡슐화)
-      return StyleDetail.fromEntity(style);
-    } catch (e) {
+    if (!style) {
       throw new NotFoundError("해당 스타일을 찾을 수 없습니다.");
     }
+
+    // 조회 성공했을 때만 조회수 증가
+    await StyleRepository.increaseViewCount(styleId);
+
+    return StyleDetail.fromEntity(style);
   };
 
   //스타일 작성
