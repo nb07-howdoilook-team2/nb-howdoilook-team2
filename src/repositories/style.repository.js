@@ -21,9 +21,6 @@ class StyleRepository {
     return prisma.style.findUnique({
       where: { id: BigInt(styleId) },
       include: {
-        categories: true,
-        tags: true,
-        imageUrls: true,
         curations: true,
       },
     });
