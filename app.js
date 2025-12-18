@@ -7,10 +7,21 @@ import router from "./src/routes/style.router.js";
 import tagRouter from "./src/routes/tag.router.js";
 import rankingRouter from "./src/routes/ranking.router.js";
 import replyRouter from "./src/routes/reply.router.js";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // 프론트 주소
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use("/comments", replyRouter);

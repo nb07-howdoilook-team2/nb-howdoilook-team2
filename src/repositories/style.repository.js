@@ -17,8 +17,17 @@ class StyleRepository {
   };
 
   // 상세조희, 조회수 상승
-  findStyleAndIncreaseView = async (styleId) => {
-    return await prisma.style.update({
+  getFindStyle = async (styleId) => {
+    return prisma.style.findUnique({
+      where: { id: BigInt(styleId) },
+      include: {
+        curations: true,
+      },
+    });
+  };
+
+  increaseViewCount = async (styleId) => {
+    return prisma.style.update({
       where: { id: BigInt(styleId) },
       data: { viewCount: { increment: 1 } },
     });
