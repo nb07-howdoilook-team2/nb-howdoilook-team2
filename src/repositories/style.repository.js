@@ -76,7 +76,13 @@ class StyleRepository {
         viewCount: true,
         curationCount: true,
         createdAt: true,
+
+        // ⭐ 랭킹에 필요한 점수 전부
         ratingTotal: true,
+        ratingTrendy: true,
+        ratingPersonality: true,
+        ratingPracticality: true,
+        ratingCostEffectiveness: true,
       },
     });
   };

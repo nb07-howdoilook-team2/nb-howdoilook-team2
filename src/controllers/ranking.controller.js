@@ -2,11 +2,14 @@ import rankingService from "../services/ranking.service.js";
 
 export const getRankingController = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, type = "all" } = req.query;
+    const { page = 1, limit = 10, rankBy, sort, type = "all" } = req.query;
+
+    const orderBy = rankBy ?? sort ?? "total";
 
     const result = await rankingService.getRankings({
-      page,
-      limit,
+      page: Number(page),
+      limit: Number(limit),
+      orderBy,
       type,
     });
 
