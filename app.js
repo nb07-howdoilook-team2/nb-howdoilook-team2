@@ -23,7 +23,6 @@ app.use(
 );
 
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 app.use("/comments", replyRouter);
 // 💡 BigInt 처리 함수:
 const bigIntToStringOrBypass = (_, value) => {
