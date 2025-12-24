@@ -8,8 +8,6 @@ import {
 } from "../utils/CustomError.js";
 import styleRepository from "../repositories/style.repository.js";
 import { calculateRatings } from "../utils/ratingCalculator.js";
-// DB에 비밀번호 넣어두고 그거랑 비교
-// // 실제 DB 모듈을 불러온다고 가정합니다. (예: Mongoose 모델, Sequelize 모델 등)
 
 // **큐레이팅 등록**
 // - 트렌디, 개성, 실용성, 가성비 점수와 한줄 큐레이팅, 닉네임, 비밀번호를 입력하여 큐레이팅을 등록합니다.
@@ -150,12 +148,7 @@ const getCurationList = async ({ styleId, pagination, keyword }) => {
   const whereCondition = {
     styleId: Number(styleId), // ID는 숫자로 변환하여 사용
   };
-  /* 2-1. 스타일 필터링 조건 추가
-   스타일을 조회할 경우 그 스타일에 해당되는 큐레이팅 목록이 같이 조회됩니다.
-   */
-  //whereCondition.styleId = styleId;
-
-  // 2-2. 닉네임 또는 내용 검색 조건 추가 (문제 조건: 닉네임, 내용(한줄평)으로 검색이 가능합니다.)
+ 
   if (keyword) {
     // insensitive 모드는 데이터베이스 검색 시 대소문자(Case)를 구별하지 않도록 지시하는 옵션
     whereCondition.OR = [

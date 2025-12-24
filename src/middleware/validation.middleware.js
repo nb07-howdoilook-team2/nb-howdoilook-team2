@@ -95,14 +95,7 @@ export const validateRegisterStyle = (req, res, next) => {
   }
 };
 
-// /src/middleware/validation.middleware.js 검증
-/**
- * 큐레이팅 등록 (POST /styles/:styleId/curations) 요청 데이터 유효성 검사
- * * - 트렌디, 개성, 실용성, 가성비 점수 (숫자, 0~10)
- * - 한줄 큐레이팅 (문자열)
- * - 닉네임 (문자열)
- * - 비밀번호 (문자열, 보안을 위해 최소 길이 요구)
- */
+//src/middleware/validation.middleware.js 검증
 export const validateRegisterCuration = (req, res, next) => {
   try {
     // 요청 본문 (Body)에서 데이터 추출
