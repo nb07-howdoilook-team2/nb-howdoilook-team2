@@ -1,9 +1,6 @@
 import curationService from "../services/curation.service.js";
 import { ForbiddenError, NotFoundError, ValidationError } from "../utils/CustomError.js";
 
-// 서비스 계층 임포트
-// 필요한 경우, 커스텀 에러 클래스 임포트 (여기서는 서비스에서 던지므로 생략 가능)
-
 // 헬퍼 함수: 페이지네이션 쿼리 파싱
 const parsePagination = (query) => {
    const page = parseInt(query.page) || 1;
